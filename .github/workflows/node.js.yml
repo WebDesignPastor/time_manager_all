@@ -22,7 +22,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-      working-directory: time_manager_app
 
     - name: Install dependencies
       run: npm install
