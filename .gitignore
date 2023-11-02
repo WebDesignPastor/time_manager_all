@@ -1,4 +1,4 @@
 .env.local
 .elixir_ls
-.TimeManagerKeys.pem
-.encoded.txt
+TimeManagerKeys.pem
+encoded.txt
