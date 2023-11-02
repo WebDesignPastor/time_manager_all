@@ -1,0 +1,68 @@
+name: Elixir CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: postgres:13
+        env:
+          POSTGRES_DB: time_manager_dev
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Elixir
+      uses: erlef/setup-beam@v1.16.0
+      with:
+        elixir-version: '1.14'
+        otp-version: '26.0'
+    - name: Restore dependencies cache
+      uses: actions/cache@v3
+      with:
+        path: deps
+        key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+        restore-keys: ${{ runner.os }}-mix-
+    - name: Install dependencies
+      run: cd time_manager && mix deps.get
+      env:
+        PGHOST: localhost
+        PGUSER: postgres
+        PGPASSWORD: postgres
+        PGDATABASE: time_manager_dev
+        PGPORT: 5432
+    - name: Setup DB
+      run: cd time_manager && mix ecto.setup
+      env:
+        PGHOST: localhost
+        PGUSER: postgres
+        PGPASSWORD: postgres
+        PGDATABASE: time_manager_dev
+        PGPORT: 5432
+    #- name: Run tests
+      #run: cd time_manager && mix test
+      #env:
+        #PGHOST: localhost
+        #PGUSER: postgres
+        #PGPASSWORD: postgres
+        #PGDATABASE: time_manager_dev
+        #PGPORT: 5432
