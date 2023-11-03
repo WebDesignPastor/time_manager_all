@@ -49,6 +49,6 @@ export default {
 .widget-user-profile {
   background-color: rgb(172, 255, 127);
   width: 20%;
-  color: aqua;
+  color: rgb(255, 34, 0);
 }
 </style>

@@ -52,5 +52,6 @@ export default {
 .widget-working-times{
   background-color: aquamarine;
   width: 20%;
+  color: darkorange;
 }
 </style>
