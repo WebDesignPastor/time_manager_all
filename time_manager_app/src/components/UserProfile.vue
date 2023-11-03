@@ -35,7 +35,7 @@ export default {
   methods: {
     async fetchUserData(userId) {
       try {
-        const response = await axios.get(`http://localhost:4000/api/users/${userId}`);
+        const response = await axios.get(`http://52.47.210.151:4000/api/users/${userId}`);
         this.userData = response.data.data;
       } catch (error) {
         console.error("There was an error fetching the user data:", error);

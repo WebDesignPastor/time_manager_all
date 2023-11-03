@@ -30,7 +30,7 @@ export default {
   methods: {
     async fetchWorkingTimesData(userId) {
       try {
-        const response = await axios.get(`http://localhost:4000/api/workingtimes/${userId}?start=2023-10-25T11:00:00Z&end=2023-10-27T15:00:00Z`);
+        const response = await axios.get(`http://52.47.210.151:4000/api/workingtimes/${userId}?start=2023-10-25T11:00:00Z&end=2023-10-27T15:00:00Z`);
         this.workingtimesData = response.data.data[0];
         console.log(this.workingtimesData)
       } catch (error) {
