@@ -52,6 +52,6 @@ export default {
 <style>
 .widget-user-list{
   background-color: rgb(255, 251, 127);
-  color: brown;
+  color: purple;
   width: 20%;
 }</style>
