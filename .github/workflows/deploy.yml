@@ -13,11 +13,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Debug SSH connection
-      run: |
-        ssh -vvv -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST
-
-
     - name: Deploy to EC2
       env:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
@@ -30,6 +25,9 @@ jobs:
         # Save private key to file
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
+
+        # Debug SSH connection
+        ssh -vvv -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST
 
         # SSH into EC2 and deploy
         ssh -tt -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST <<-EOF
