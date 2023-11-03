@@ -29,15 +29,18 @@ jobs:
         # SSH into EC2 and deploy
         ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST <<-EOF
 
-          # Clone repo
-          git clone https://github.com/WebDesignPastor/time_manager_all.git
+          # Change to project directory
           cd time_manager_all
+
+          # Pull latest changes
+          git pull
 
           # Set environment variables
           export PGUSER=$PGUSER
           export PGPASSWORD=$PGPASSWORD
           export PGDATABASE=$PGDATABASE
 
-          # Start the services
-          sudo docker-compose up -d
+          # Restart the services with forced build
+          sudo docker-compose down
+          sudo docker-compose up -d --build
         EOF
