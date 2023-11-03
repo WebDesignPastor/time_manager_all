@@ -31,7 +31,7 @@ jobs:
 
           # Clone repo
           curl -L https://github.com/WebDesignPastor/time_manager_all/archive/refs/heads/master.tar.gz | tar -xz
-          cd time_manager_all-master
+          cd time_manager_all
 
           # Set environment variables
           export PGUSER=$PGUSER
