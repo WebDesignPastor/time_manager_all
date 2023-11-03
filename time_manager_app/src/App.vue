@@ -1,5 +1,5 @@
 <template>
-  <UserList @selectedUser="updateSelectedUser" msg="Select a User"/>
+  <UserList @selectedUser="updateSelectedUser" msg="Select the User"/>
   <WorkingTimes :userId="selectedUserId" msg="User's working times"/>
   <UserProfile :userId="selectedUserId" msg="User Profile"/>
 

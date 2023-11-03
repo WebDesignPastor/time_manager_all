@@ -1,8 +1,6 @@
 <template>
   <div class="widget-user-list">
     <h1>{{ msg }}</h1>
-    <h2>OUI</h2>
-
     <!-- Dropdown menu for usernames -->
     <select v-model="selectedUser">
       <option v-for="user in userData" :key="user.id" :value="user">
