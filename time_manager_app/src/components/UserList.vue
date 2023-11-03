@@ -9,10 +9,8 @@
       </option>
     </select>
 
-    <!-- Display details for the selected user -->
     <div v-if="selectedUser">
       <p>Username: {{ selectedUser.username }}</p>
-      <!-- You can add more user details here if needed -->
     </div>
   </div>
 </template>
@@ -28,7 +26,7 @@ export default {
   data() {
     return {
       userData: null,
-      selectedUser: null  // To keep track of the selected user from the dropdown
+      selectedUser: null
     };
   },
   mounted() {
