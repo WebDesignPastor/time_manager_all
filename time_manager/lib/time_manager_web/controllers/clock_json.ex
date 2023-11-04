@@ -15,11 +15,17 @@ defmodule TimeManagerWeb.ClockJSON do
     %{data: data(clock)}
   end
 
+  def error(%{message: message}) do
+    %{error: message} 
+  end
+
   defp data(%Clock{} = clock) do
     %{
       id: clock.id,
-      time: clock.time,
-      status: clock.status
+      start: clock.start,
+      end: clock.end,
+      status: clock.status,
+      user_id: clock.user_id
     }
   end
 end

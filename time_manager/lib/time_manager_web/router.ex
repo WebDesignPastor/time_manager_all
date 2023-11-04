@@ -3,19 +3,37 @@ defmodule TimeManagerWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug :put_secure_browser_headers
+  end
+
+  pipeline :csrf do
+    plug :protect_from_forgery
   end
 
   scope "/api", TimeManagerWeb do
-    pipe_through :api
+    pipe_through [:api]
+    # commented to remove csrf protection
+    # pipe_through [:api, :csrf]
 
     resources "/users", UserController, param: "userID", except: [:new, :edit]
+    post "/users/sign_up", AuthController, :sign_up
+    post "/users/sign_out", AuthController, :sign_out 
   
-    #post "/workingtimes/:userID", WorkingTimeController, :create
     resources "/workingtimes/:userID", WorkingTimeController, only: [:index, :create, :show]
     resources "/workingtimes", WorkingTimeController, only: [:delete, :update]
 
     resources "/clocks/:userID", ClockController, only: [:index, :create]
+
+    patch "/clocks/:userID", ClockController, :clock
     
+  end
+
+  scope "/api", TimeManagerWeb do
+    pipe_through :api
+    
+    post "/users/sign_in", AuthController, :sign_in, as: :sign_in
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

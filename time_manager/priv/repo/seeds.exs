@@ -17,4 +17,6 @@ alias TimeManager.Users
 alias TimeManager.Users.User
 
 Repo.delete_all(User)
-TimeManager.Users.create_user(%{email: "test@test.com", username: "test"})
+TimeManager.Users.User.create_user(%{email: "test@test.com", username: "test"})
+
+

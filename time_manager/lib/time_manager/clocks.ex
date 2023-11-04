@@ -8,6 +8,14 @@ defmodule TimeManager.Clocks do
 
   alias TimeManager.Clocks.Clock
 
+  def get_last_clock(id) do
+     Clock
+     |> where(user_id: ^id)
+     |> order_by(desc: :id)
+     |> limit(1)
+     |> Repo.one()
+  end
+
   @doc """
   Returns the list of clocks.
 
@@ -49,9 +57,16 @@ defmodule TimeManager.Clocks do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_clock(id, attrs \\ %{}) do
+  def create_clock(id) do
+    current_time = NaiveDateTime.local_now()
+
+    clock_params = %{
+      start: current_time,
+      status: true,
+    }
+
     %Clock{user_id: id}
-    |> Clock.changeset(attrs)
+    |> Clock.changeset(clock_params)
     |> Repo.insert()
   end
 
@@ -67,6 +82,16 @@ defmodule TimeManager.Clocks do
       {:error, %Ecto.Changeset{}}
 
   """
+  def update_last_clock(%Clock{} = clock) do
+    current_time = NaiveDateTime.local_now()
+
+    clock_params = %{status: false, end: current_time}
+
+    clock
+    |> Clock.changeset(clock_params)
+    |> Repo.update()
+  end
+
   def update_clock(%Clock{} = clock, attrs) do
     clock
     |> Clock.changeset(attrs)

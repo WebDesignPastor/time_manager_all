@@ -6,10 +6,18 @@ defmodule TimeManagerWeb.UserController do
 
   action_fallback TimeManagerWeb.FallbackController
 
-  def index(conn, %{"username" => username, "email" => email}) do
-    user = Users.get_by(username, email)
-    render(conn, :index, user: user)
-  end
+  #def sign_in(conn, %{"email" => email, "password" => password}) do
+  #  case Users.get_by_email(email) do
+  #    %User{} = user -> 
+  #      case Bcrypt.verify_pass(password, user.password) do
+  #        true ->
+  #          render(conn, :index, user: user)
+  #        false -> 
+  #          render(conn, :error, message: "Incorrect password")
+  #      end
+  #    _ -> render(conn, :error, message: "User not found") 
+  #  end
+  #end
 
   def index(conn, _params) do
     users = Users.list_users()
@@ -26,7 +34,14 @@ defmodule TimeManagerWeb.UserController do
   end
 
   def show(conn, %{"userID" => id}) do
-    user = Users.get_user!(id)
+    case Users.get_by_id(id) do 
+      { :ok, %User{} = user } -> render(conn, :references_show, user: user)
+      _ -> render(conn, :error, message: "User not found")
+    end
+  end
+
+  def show(conn, %{"username" => username, "email" => email}) do
+    user = Users.get_by(username, email)
     render(conn, :show, user: user)
   end
 

@@ -1,18 +1,66 @@
 # TimeManager
 
-To start your Phoenix server:
+## USER
+**Get all users**\
+ `http://localhost:4000/api/users`
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+**Get user by username and email**\
+`http://localhost:4000/api/users?username=XXX&email=YYY`
+ 
+**Create user**\
+`http://localhost:4000/api/users`
+```
+{
+  "user": {
+    "username": "test2",
+    "email": "test2@test.com"
+  }
+}
+```
+**Update user**\
+`http://localhost:4000/api/users/:userID`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+**Delete user**\
+`http://localhost:4000/api/users/:userID`
+## WORKING TIME
+**Get working times between start and end**\
+`http://localhost:4000/api/workingtimes/1?start=XXX&end=YYY`
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+**Get specific working time**\
+`http://localhost:4000/api/workingtimes/:userID/:id`
 
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+**Create working times**\
+`http://localhost:4000/api/workingtimes/:userID`
+```
+{
+    "working_time": {
+        "start": "2023-10-27T12:34:56Z",
+        "end": "2023-10-27T19:34:56Z"
+    }
+}
+```
+**Update working time**\
+`http://localhost:4000/api/workingtimes/:id`
+```
+{
+    "working_time": {
+        "start": "2023-10-27T12:34:56Z",
+        "end": "2023-10-27T19:34:56Z"
+    }
+}
+```
+**Delete working time**\
+`http://localhost:4000/api/workingtimes/:id`
+## CLOCK
+**Get clock**\
+`http://localhost:4000/api/clocks/:userID`
+**Create clock**\
+`http://localhost:4000/api/clocks/:userID`
+```
+{
+	"clock":  {
+	"time":  "2023-10-27T12:34:56Z",
+	"status":  true
+	}
+}
+```
