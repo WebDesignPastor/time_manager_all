@@ -2,9 +2,9 @@ name: Elixir CI
 
 on:
   push:
-    branches: [ "oui" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "oui" ]
+    branches: [ "master" ]
 
 permissions:
   contents: read
