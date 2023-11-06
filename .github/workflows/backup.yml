@@ -30,7 +30,12 @@ jobs:
 
         # SSH into EC2 instance and perform the backup
         ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST <<-EOF
-          # Perform the backup here. You might have a script ready for this, or perform the commands directly.
-          # Example command for PostgreSQL:
+          # Install PostgreSQL client tools if not already installed
+          which pg_dump || (sudo apt-get update && sudo apt-get install -y postgresql-client)
+
+          # Perform the backup
           PGPASSWORD=$PGPASSWORD pg_dump -U $PGUSER $PGDATABASE > backup_$(date +%F).sql
+
+          # Here, you would also handle where to store the backup, like uploading it to S3 or another secure location.
+          # aws s3 cp backup_$(date +%F).sql s3://your-backup-bucket/your-app-name/
         EOF
