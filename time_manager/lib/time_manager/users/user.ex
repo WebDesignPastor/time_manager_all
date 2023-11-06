@@ -8,12 +8,12 @@ defmodule TimeManager.Users.User do
     field :username, :string
     field :email, :string
     field :password, :string
-    field :role, :string
+    field :role, :string, default: "employee"
     field :manager_id, :integer
     field :teams_id, {:array, :integer}
     field :managed_teams, {:array, :integer}
     has_many :workingtimes, WorkingTime
-    has_one :clocks, Clock
+    has_many :clocks, Clock
 
     timestamps(type: :utc_datetime)
   end

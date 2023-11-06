@@ -28,10 +28,10 @@ defmodule TimeManagerWeb.ClockController do
     end
   end
 
-  def index(conn, _params) do
-    clocks = Clocks.list_clocks()
-    render(conn, :index, clocks: clocks)
-  end
+  #def index(conn, _params) do
+  #  clocks = Clocks.list_clocks()
+  #  render(conn, :index, clocks: clocks)
+  #end
 
   def create(conn, %{"userID" => id}) do
     id = String.to_integer(id)

@@ -12,7 +12,7 @@ defmodule TimeManagerWeb.ClockJSON do
   Renders a single clock.
   """
   def show(%{clock: clock}) do
-    %{data: data(clock)}
+    data(clock)
   end
 
   def error(%{message: message}) do
@@ -21,7 +21,6 @@ defmodule TimeManagerWeb.ClockJSON do
 
   defp data(%Clock{} = clock) do
     %{
-      id: clock.id,
       start: clock.start,
       end: clock.end,
       status: clock.status,
