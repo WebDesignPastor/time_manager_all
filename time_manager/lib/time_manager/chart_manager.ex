@@ -12,12 +12,8 @@ defmodule TimeManager.ChartManager do
   end
 
   defp get_team_members(teams, startTime, endTime) do
-      wt_query =
-      from(c in Clock, where: wt.start >= ^startTime and wt.end <= ^endTime )
-      c_query =
-      from(wt in WorkingTime, where: c.start >= ^startTime and c.end <= ^endTime )
       query =
-      from(u in User, where: fragment("? @> ?::integer[]", u.teams_id, ^teams), preload: [workingtimes: ^wt_query], preload: [clocks: ^c_query])
+      from(u in User, where: fragment("? @> ?::integer[]", u.teams_id, ^teams))
       Repo.all(query)
     
   end
