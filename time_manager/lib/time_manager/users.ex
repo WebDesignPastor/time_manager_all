@@ -4,9 +4,9 @@ defmodule TimeManager.Users do
   """
 
   import Ecto.Query, warn: false
-  alias Hex.API.User
   alias TimeManager.Repo
   alias TimeManager.Users.User
+  alias TimeManager.Clocks.Clock
 
   @doc """
   Returns the list of users.
@@ -38,57 +38,64 @@ defmodule TimeManager.Users do
 
   def get_user!(id), do: Repo.get!(User, id)
 
+  defp last_clock(user_id) do
+    Clock
+    |> where(user_id: ^user_id)
+    |> order_by(desc: :id)
+    |> limit(1)
+    |> Repo.one()
+  end
+
   @doc """
     get user by email
   """
   def get_by_email(email) do
-    user =
+    user_with_clock =
       User
       |> where(email: ^email)
       |> Repo.one()
-      |> Repo.preload([:workingtimes, :clocks])
+      |> Repo.preload([:workingtimes])
+      |> case do
+        nil -> nil
+        user -> %{user | clocks: last_clock(user.id)}
+      end
 
-    filter_workingtimes(user)
+    filter_workingtimes(user_with_clock)
   end
 
   def get_by_id(id) do
-    user =
+    user_with_clock =
       User
       |> where(id: ^id)
       |> Repo.one()
-      |> Repo.preload([:workingtimes, :clocks])
+      |> Repo.preload([:workingtimes])
+      |> case do
+        nil -> nil
+        user -> %{user | clocks: last_clock(user.id)}
+      end
 
-    filter_workingtimes(user)
+    filter_workingtimes(user_with_clock)
   end
 
   defp filter_workingtimes(user) do
     case user do
       nil -> {}
       user -> 
-          { start_of_week, end_of_week } = find_current_week()
+        { start_of_week, end_of_week } = find_current_week()
 
-          user_with_weekly_time =
-            %User{
-              user |
-              workingtimes: 
-                case user.workingtimes do
-                  nil -> []
-                  workingtimes -> 
-                    Enum.filter(user.workingtimes, fn workingtime -> 
-                      Date.compare(workingtime.start, start_of_week) != :lt and
-                      Date.compare(workingtime.end, end_of_week) != :gt
-                    end)
-                end,
-              clocks:
-                case user.clocks do
-                  nil -> []
-                  clocks -> 
-                    Enum.filter(user.clocks, fn clock ->   
-                      Date.compare(clock.start, start_of_week)  != :lt and
-                      Date.compare(clock.end, end_of_week) != :gt
-                    end)
-                end
-            }
+        user_with_weekly_time =
+          %User{
+            user |
+            workingtimes: 
+              case user.workingtimes do
+                [] -> nil
+                workingtimes -> 
+                  Enum.filter(workingtimes, fn workingtime -> 
+                    Date.compare(workingtime.start, start_of_week) != :lt and
+                    Date.compare(workingtime.end, end_of_week) != :gt
+                  end)
+              end,
+          }
         {:ok, user_with_weekly_time}
     end
   end
@@ -115,9 +122,9 @@ defmodule TimeManager.Users do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_user(attrs \\ %{}) do
+  def create_user(username, email, password) do
     %User{}
-    |> User.changeset(attrs)
+    |> User.changeset(%{username: username, email: email, password: password})
     |> Repo.insert()
   end
 

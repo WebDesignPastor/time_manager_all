@@ -7,7 +7,7 @@ defmodule TimeManagerWeb.AuthController do
 
   action_fallback TimeManagerWeb.FallbackController
 
-  def sign_in(conn, %{"email" => email, "password" => password}) do
+  def login(conn, %{"email" => email, "password" => password}) do
     case Users.get_by_email(email) do
       {:ok, %User{} = user} -> 
         case Bcrypt.verify_pass(password, user.password) do
@@ -36,7 +36,7 @@ defmodule TimeManagerWeb.AuthController do
     end
   end
 
-  def sign_out(conn, _params) do
+  def logout(conn, _params) do
     render(conn, :error, message: "sign_out not working")
   end
 end 

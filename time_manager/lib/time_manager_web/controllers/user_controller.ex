@@ -6,26 +6,14 @@ defmodule TimeManagerWeb.UserController do
 
   action_fallback TimeManagerWeb.FallbackController
 
-  #def sign_in(conn, %{"email" => email, "password" => password}) do
-  #  case Users.get_by_email(email) do
-  #    %User{} = user -> 
-  #      case Bcrypt.verify_pass(password, user.password) do
-  #        true ->
-  #          render(conn, :index, user: user)
-  #        false -> 
-  #          render(conn, :error, message: "Incorrect password")
-  #      end
-  #    _ -> render(conn, :error, message: "User not found") 
-  #  end
-  #end
-
   def index(conn, _params) do
     users = Users.list_users()
     render(conn, :index, users: users)
   end
 
-  def create(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- Users.create_user(user_params) do
+  # error messages already set with constraint error / may need to edit it's formating
+  def create(conn, %{"username" => username, "email" => email, "password" => password}) do
+    with {:ok, %User{} = user} <- Users.create_user(username, email, password) do
       conn
       |> put_status(:created)
       |> put_resp_header("location", ~p"/api/users/#{user}")
@@ -40,16 +28,16 @@ defmodule TimeManagerWeb.UserController do
     end
   end
 
-  def show(conn, %{"username" => username, "email" => email}) do
-    user = Users.get_by(username, email)
-    render(conn, :show, user: user)
-  end
+  #def show(conn, %{"username" => username, "email" => email}) do
+  #  user = Users.get_by(username, email)
+  #  render(conn, :show, user: user)
+  #end
 
-  def update(conn, %{"userID" => id, "user" => user_params}) do
+  def update(conn, %{"userID" => id} = user_params) do
     user = Users.get_user!(id)
 
     with {:ok, %User{} = user} <- Users.update_user(user, user_params) do
-      render(conn, :show, user: user)
+      render(conn, :full_user_show, user: user)
     end
   end
 
