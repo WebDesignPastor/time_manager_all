@@ -26,7 +26,7 @@ export default createStore({
         setSignIn (state, payload) {
             state.isAuth = true
             state.currUser.id = payload.id
-            state.currUser.username = payload.username 
+            state.currUser.username = payload.username
             state.currUser.email = payload.email
             state.token = payload.token
         },
@@ -43,6 +43,9 @@ export default createStore({
         },
         changeWeek ({ commit }, payload) {
             commit('setCurrWeek', payload)
-        }
+        },
+        toggleSidebar({ commit }) {
+          commit('toggleSidebar');
+        },
     }
 })

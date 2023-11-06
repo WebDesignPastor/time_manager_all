@@ -19,7 +19,7 @@ export default {
                         })
                     }
                 })
-                
+
                 this.teamsAlreadyDisplayed.push(parseInt(e.target.value))
             } else {
                 if(this.teamsAlreadyDisplayed.length > 1) {
@@ -49,7 +49,7 @@ export default {
                 ['2014', 4],
                 ['2015', 6],
                 ['2016', 8]
-            ],  
+            ],
             chartOptions: {
                 legend: 'none',
                 vAxis: { minValue: 0 },
@@ -78,7 +78,7 @@ export default {
                 </li>
             </ul>
         </div>
-        <GChart 
+        <GChart
             type="AreaChart"
             :data="chartData"
             :options="chartOptions"

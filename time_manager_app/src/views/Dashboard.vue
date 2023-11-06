@@ -37,6 +37,6 @@ export default {
 
 <style>
 .wrapper {
-    width: 1000px;
+    width: 100%;
 }
 </style>

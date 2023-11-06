@@ -10,7 +10,7 @@ export default {
     },
     methods: {
         handleClock() {
-            // vérifie si le store est bien initialiser
+            // vérifie si le store est bien initialisé
             if (this.$store.state.currUser.clock.isClocking !== null) {
                 if (!this.$store.state.currUser.clock.isClocking) {
                     // vérif si l'on est dans une période de working time

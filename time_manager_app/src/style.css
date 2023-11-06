@@ -22,3 +22,6 @@ body {
   align-items: center;
 }
 
+#app {
+  width: 100%;
+}
