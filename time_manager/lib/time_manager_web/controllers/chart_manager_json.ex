@@ -1,11 +1,10 @@
 defmodule TimeManagerWeb.ChartManagerJSON do
 
   def error(%{message: message}) do
-    %{error: message} 
+    %{error: message}
   end
 
   def show(%{users: users}) do
-    for 
   end
 
 end
