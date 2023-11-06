@@ -18,9 +18,9 @@ jobs:
         PRIVATE_KEY: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
         HOST: ${{ secrets.EC2_HOST }}
         USER: ${{ secrets.EC2_USER }}
-        PGUSER: ${{ secrets.PGUSER }}
-        PGPASSWORD: ${{ secrets.PGPASSWORD }}
-        PGDATABASE: ${{ secrets.PGDATABASE }}
+        PGUSER: ${{ secrets.PG_USER }}
+        PGPASSWORD: ${{ secrets.PG_PASSWORD }}
+        PGDATABASE: ${{ secrets.PGD_ATABASE }}
       run: |
         # Save private key to file
         echo "$PRIVATE_KEY" > private_key.pem
