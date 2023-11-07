@@ -53,7 +53,6 @@ jobs:
         PGPASSWORD: ${{ secrets.PG_PASSWORD }}
         PGDATABASE: ${{ secrets.PG_DATABASE }}
         PGPORT: 5432
-<<<<<<< HEAD
 
     - name: Wait for PostgreSQL
       run: |
@@ -64,16 +63,6 @@ jobs:
       env:
         PGPASSWORD: ${{ secrets.PG_PASSWORD }}
 
-=======
-    - name: Wait for PostgreSQL
-      run: |
-        echo "Waiting for PostgreSQL to become ready..."
-        sleep 10
-    - name: Check DB connection
-      run: pg_isready -h db -p 5432 -U ${{ secrets.PG_USER }}
-      env:
-        PGPASSWORD: ${{ secrets.PG_PASSWORD }}
->>>>>>> b455f3aaadb21a24c69113156eb60810429c20d4
     - name: Setup DB
       run: cd time_manager && mix ecto.setup
       env:
