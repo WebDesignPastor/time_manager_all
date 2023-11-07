@@ -27,7 +27,7 @@ export default {
 </script>
 
 <template>
-    <div class="w-4/12 h-56 px-6 py-4 bg-clockbg rounded-3xl shadow flex flex-col justify-between">
+    <div class="w-full sm:w-4/12 h-56 px-6 py-4 bg-clockbg rounded-3xl shadow flex flex-col justify-between">
         <h2 class="m-0 text-2xl font-bold tracking-tight text-second-text">Clock</h2>
         <div class="flex justify-center items-center flex-col" v-if="clock.isClocking">
             <span class="text-gray text-sm mb-2">Started at :</span>

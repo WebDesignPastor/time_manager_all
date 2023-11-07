@@ -26,7 +26,7 @@ export default {
 </script>
 
 <template>
-    <div class="sidebar-content mr-12 ml-8 mt-8">
+    <div class="sidebar-content hidden sm:block mr-12 ml-8 mt-8">
         <div @click="changeContent(content[0])" v-bind:class="[ this.$store.state.currentContent === content[0] ? activeClass : notActiveClass ]" class="[&>*]:w-8 [&>*]:h-8 [&>*]:cursor-pointer mb-12 rounded-full h-10 w-10 flex justify-center items-center">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />

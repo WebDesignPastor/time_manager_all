@@ -25,10 +25,10 @@ export default {
         <Header />
         <div class="content flex">
             <Sidebar />
-            <div v-if="isDashboard" class="w-full mt-12">
+            <div v-if="isDashboard" class="w-full sm:mt-12">
                 <UserDashboard />
             </div>
-            <div v-if="isGraphs" class="w-full mt-12">
+            <div v-if="isGraphs" class="w-full sm:mt-12">
                 <ChartManager />
             </div>
         </div>
@@ -37,6 +37,13 @@ export default {
 
 <style>
 .wrapper {
-    width: 100%;
+    width: 80vw;
+}
+
+@media(max-width: 640px){
+  .wrapper {
+    width: 100vw;
+    padding: 20px;
+  }
 }
 </style>

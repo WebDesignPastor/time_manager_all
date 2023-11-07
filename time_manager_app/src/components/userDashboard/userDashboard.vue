@@ -16,12 +16,12 @@ export default {
 </script>
 
 <template>
-    <div class="w-full flex justify-between gap-6">
+    <div class="flex flex-col sm:flex-row w-full justify-between gap-6">
         <Summary />
         <Random />
         <Clock />
     </div>
-    <div class="w-full flex justifybetween gap-6 mt-6">
+    <div class="flex flex-col sm:flex-row w-full justify-between gap-6 mt-8">
         <Workingtime />
         <DashboardGraph />
     </div>

@@ -66,7 +66,7 @@ export default {
 </script>
 
 <template>
-    <div class="w-6/12 h-62 p-3 bg-clockbg rounded-3xl shadow flex flex-col">
+    <div class="w-full sm:w-6/12 h-62 p-3 bg-clockbg rounded-3xl shadow flex flex-col">
         <div class="flex flex-col mx-2">
             <span class="m-0 mb-2 text-xl font-bold tracking-tight text-second-text">Daily average hours worked by teams :</span>
             <ul class="items-center w-full text-sm font-medium bg-clockbg sm:flex">
