@@ -5,15 +5,46 @@ defmodule TimeManager.WorkingTimes do
 
   import Ecto.Query, warn: false
   alias TimeManager.Repo
-
+  alias TimeManager.Users
   alias TimeManager.WorkingTimes.WorkingTime
 
   def list_user_workingtimes(id) do
-    WorkingTime
-    |> where(user_id: ^id)
-    |> Repo.all()
-
+    case Users.get_user(id) do
+      nil ->
+        {:error, :user_not_found}
+      user ->
+        working_time =
+        WorkingTime
+        |> where(user_id: ^id)
+        |> Repo.all()
+        case working_time do
+          [] ->
+            {:error, :workingtime_not_found}
+          _ ->
+            {:ok, working_time}
+        end
+    end
   end
+
+
+  # def list_user_workingtimes(id) do
+  #   user = Repo.get(User, id)
+
+  #   if user do
+  #     WorkingTime
+  #     |> where(user_id: ^id)
+  #     |> Repo.all()
+  #     |> case do
+  #       [] -> {:error, :no_working_times}
+  #       working_times -> {:ok, working_times}
+  #     end
+  #   else
+  #     {:error, :user_not_found}
+  #   end
+  # end
+
+
+
   @doc """
   Returns the list of workingtimes.
 

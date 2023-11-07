@@ -3,6 +3,7 @@ defmodule TimeManagerWeb.WorkingTimeController do
 
   alias TimeManager.WorkingTimes
   alias TimeManager.WorkingTimes.WorkingTime
+  alias TimeManager.FallbackController
 
   action_fallback TimeManagerWeb.FallbackController
 
@@ -13,14 +14,35 @@ defmodule TimeManagerWeb.WorkingTimeController do
 
   #currently send an empty array if no working time might need to change this
   def index(conn, %{"userID" => id}) do
-    working_times = WorkingTimes.list_user_workingtimes(id)  
-    render(conn, :index, workingtimes: working_times)
+    working_times = WorkingTimes.list_user_workingtimes(id)
+    case working_times do
+      {:error, :workingtime_not_found} ->
+        conn |> put_status(:not_found) |> render(:error, message: "Workingtime not found")
+      {:error, :user_not_found} ->
+        conn |> put_status(:not_found) |> render(:error, message: "User not found")
+      {:ok, working_times} ->
+        render(conn, :index, workingtimes: working_times)
+    end
   end
+
 
   def show(conn, %{"userID" => user_id, "id" => id}) do
     workingtime = WorkingTimes.get_one(user_id, id)
     render(conn, :index, workingtimes: workingtime)
   end
+
+  # def show(conn, %{"userID" => user_id, "id" => id}) do
+  #   case WorkingTimes.get_one(user_id, id) do
+  #     %WorkingTime{} = workingtime ->
+  #       conn
+  #       |> put_status(:ok)
+  #       |> render(:index, workingtimes: workingtime)
+  #     _ ->
+  #       conn
+  #       |> put_status(:bad_request)
+  #       |> render(:error, message: "couldn't find workingtime")
+  #   end
+  # end
 
   def create(conn, %{"userID" => id, "start" => startTime, "end" => endTime}) do
     id = String.to_integer(id)

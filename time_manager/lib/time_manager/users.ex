@@ -38,6 +38,12 @@ defmodule TimeManager.Users do
 
   def get_user!(id), do: Repo.get!(User, id)
 
+  def get_user(id) do
+    User
+    |> where(id: ^id)
+    |> Repo.one()
+  end
+
   defp last_clock(user_id) do
     Clock
     |> where(user_id: ^user_id)
@@ -80,17 +86,17 @@ defmodule TimeManager.Users do
   defp filter_workingtimes(user) do
     case user do
       nil -> {}
-      user -> 
+      user ->
         { start_of_week, end_of_week } = find_current_week()
 
         user_with_weekly_time =
           %User{
             user |
-            workingtimes: 
+            workingtimes:
               case user.workingtimes do
                 [] -> nil
-                workingtimes -> 
-                  Enum.filter(workingtimes, fn workingtime -> 
+                workingtimes ->
+                  Enum.filter(workingtimes, fn workingtime ->
                     Date.compare(workingtime.start, start_of_week) != :lt and
                     Date.compare(workingtime.end, end_of_week) != :gt
                   end)
