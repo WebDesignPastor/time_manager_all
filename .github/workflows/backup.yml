@@ -37,7 +37,7 @@ jobs:
             export PGDATABASE=$PGDATABASE
 
             # Perform the backup inside the Docker container
-            docker exec $CONTAINER pg_dump -U $PGUSER $PGDATABASE > backup_$(date +%F).sql
+            sudo docker exec $CONTAINER pg_dump -U $PGUSER $PGDATABASE > backup_$(date +%F).sql
 
             # Here, you would also handle where to store the backup, like uploading it to S3 or another secure location.
             # aws s3 cp backup_$(date +%F).sql s3://your-backup-bucket/your-app-name/
