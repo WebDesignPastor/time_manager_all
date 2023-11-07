@@ -10,7 +10,7 @@ defmodule TimeManager.Users.User do
     field :password, :string
     field :role, :string, default: "employee"
     field :manager_id, :integer
-    field :teams_id, {:array, :integer}
+    field :teams_id, :integer
     field :managed_teams, {:array, :integer}
     has_many :workingtimes, WorkingTime
     has_many :clocks, Clock
