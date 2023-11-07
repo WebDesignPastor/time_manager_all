@@ -12,6 +12,10 @@ defmodule TimeManagerWeb.Router do
     plug :protect_from_forgery
   end
 
+  pipeline :auth do
+    plug TimeManagerWeb.JWTAuthPlug
+  end
+
   scope "/api", TimeManagerWeb do
     pipe_through [:api]
     # commented to remove csrf protection

@@ -27,7 +27,13 @@ defmodule TimeManagerWeb.AuthController do
               "csrf_token" => csrf_token,
               "exp" => System.system_time(:second) + 30 * 24 * 60 * 60
             }
+            # generate token
             {:ok, token, _claims} = JWTToken.generate_and_sign(extra_claims, signer)
+            # verify token
+            {:ok, claims} = JWTToken.verify_and_validate(token, signer)
+
+            IO.inspect(claims)
+
             render(conn, :auth, user: user, token: token)
           false -> 
             render(conn, :error, message: "Incorrect password")
