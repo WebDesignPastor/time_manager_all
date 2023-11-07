@@ -24,6 +24,7 @@ jobs:
           PGUSER: ${{ secrets.PG_USER }}
           PGPASSWORD: ${{ secrets.PG_PASSWORD }}
           PGDATABASE: ${{ secrets.PG_DATABASE }}
+          BACKUP_DIR: /home/ubuntu/backups
         run: |
           # Save private key to file
           echo "$PRIVATE_KEY" > private_key.pem
@@ -31,14 +32,14 @@ jobs:
 
           # SSH into EC2 instance and perform the backup
           ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST <<-EOF
+            # Ensure the backup directory exists
+            mkdir -p $BACKUP_DIR
+
             # Export environment variables for the pg_dump command
             export PGUSER=$PGUSER
             export PGPASSWORD=$PGPASSWORD
             export PGDATABASE=$PGDATABASE
 
-            # Perform the backup inside the Docker container
-            sudo docker exec $CONTAINER pg_dump -U $PGUSER $PGDATABASE > backup_$(date +%F).sql
-
-            # Here, you would also handle where to store the backup, like uploading it to S3 or another secure location.
-            # aws s3 cp backup_$(date +%F).sql s3://your-backup-bucket/your-app-name/
+            # Perform the backup inside the Docker container and save it to the backups folder
+            sudo docker exec $CONTAINER pg_dump -U $PGUSER $PGDATABASE > $BACKUP_DIR/backup_$(date +%F).sql
           EOF
