@@ -46,11 +46,18 @@ jobs:
         restore-keys: ${{ runner.os }}-mix-
 
     - name: Check db connectivity
-      run: |
-        until pg_isready -h db -p 5432; do
-          echo "$(date) - waiting for database to start"
-          sleep 2
-        done
+    run: |
+      until pg_isready -h db -p 5432; do
+        echo "$(date) - waiting for database to start"
+        sleep 2
+      done
+      echo "Database is ready!"
+    continue-on-error: true  # Continue if this step fails
+
+  - name: Log db service logs
+    if: failure()  # This step will run only if the previous step fails
+    run: docker logs ${{ job.services.db.id }}
+
 
     - name: Install dependencies
       run: cd time_manager && mix deps.get
