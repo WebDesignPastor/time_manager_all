@@ -50,6 +50,15 @@ jobs:
         PGPASSWORD: ${{ secrets.PG_PASSWORD }}
         PGDATABASE: ${{ secrets.PG_DATABASE }}
         PGPORT: 5432
+    - name: Check DB connection
+      run: pg_isready -h db -p 5432 -U ${{ secrets.PG_USER }}
+      env:
+        PGPASSWORD: ${{ secrets.PG_PASSWORD }}
+    - name: Debug DNS
+      run: |
+        apt-get update
+        apt-get install -y dnsutils
+        nslookup db
     - name: Setup DB
       run: cd time_manager && mix ecto.setup
       env:
