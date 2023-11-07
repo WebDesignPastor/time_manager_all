@@ -36,7 +36,7 @@ jobs:
           git pull
 
           # Set environment variables
-          export PGUSER=$PGUSER
+          export PGSER=$PGUSER
           export PGPASSWORD=$PGPASSWORD
           export PGDATABASE=$PGDATABASE
 
