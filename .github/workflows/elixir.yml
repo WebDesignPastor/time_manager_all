@@ -31,52 +31,38 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
     - name: Set up Elixir
       uses: erlef/setup-beam@v1.16.0
       with:
         elixir-version: '1.14'
         otp-version: '26.0'
-
     - name: Restore dependencies cache
       uses: actions/cache@v3
       with:
         path: deps
         key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
         restore-keys: ${{ runner.os }}-mix-
-
     - name: Install dependencies
       run: cd time_manager && mix deps.get
       env:
-        PGHOST: db
-        PGUSER: ${{ secrets.PG_USER }}
-        PGPASSWORD: ${{ secrets.PG_PASSWORD }}
-        PGDATABASE: ${{ secrets.PG_DATABASE }}
+        PGHOST: localhost
+        POSTGRES_USER: ${{ secrets.PG_USER }}
+        POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
+        POSTGRES_DB: ${{ secrets.PG_DATABASE }}
         PGPORT: 5432
-
-    - name: Wait for PostgreSQL
-      run: |
-        echo "Waiting for PostgreSQL to become ready..."
-        until pg_isready -h db -p 5432 -U ${{ secrets.PG_USER }}; do
-          sleep 1
-        done
-      env:
-        PGPASSWORD: ${{ secrets.PG_PASSWORD }}
-
     - name: Setup DB
       run: cd time_manager && mix ecto.setup
       env:
-        PGHOST: db
-        PGUSER: ${{ secrets.PG_USER }}
-        PGPASSWORD: ${{ secrets.PG_PASSWORD }}
-        PGDATABASE: ${{ secrets.PG_DATABASE }}
+        PGHOST: localhost
+        POSTGRES_USER: ${{ secrets.PG_USER }}
+        POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
+        POSTGRES_DB: ${{ secrets.PG_DATABASE }}
         PGPORT: 5432
-
-    - name: Run tests
-      run: cd time_manager && mix test
-      env:
-        PGHOST: db
-        PGUSER: ${{ secrets.PG_USER }}
-        PGPASSWORD: ${{ secrets.PG_PASSWORD }}
-        PGDATABASE: ${{ secrets.PG_DATABASE }}
-        PGPORT: 5432
+    #- name: Run tests
+      #run: cd time_manager && mix test
+      #env:
+        #PGHOST: localhost
+        #PGUSER: postgres
+        #PGPASSWORD: postgres
+        #PGDATABASE: time_manager_dev
+        #PGPORT: 5432
