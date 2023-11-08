@@ -29,3 +29,9 @@ export const getWeekFromDate = (date) => {
     let newUrl = `start=${formatDate(firstDay)}T01:00:00&end=${formatDate(lastDay)}T23:00:00`
     return {'days': toSend, 'url': newUrl, 'week': getWeek(date)}
 }
+
+export const formatDisplayDate = (date) => {
+    let val = new Date(date)
+    let hours = date.slice(date.indexOf('T') + 1).slice(0, -3)
+    return `${val.toDateString()} ${hours}`
+}
