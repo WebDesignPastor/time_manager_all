@@ -3,8 +3,8 @@ defmodule TimeManagerWeb.AuthJSON do
   alias TimeManager.Users.User
   alias TimeManager.Clocks.Clock
 
-  def auth(%{user: user}) do
-    data(user)
+  def auth(%{user: user, token: token}) do
+    data(user, token)
   end
   
   def error(%{message: message}) do
@@ -25,8 +25,9 @@ defmodule TimeManagerWeb.AuthJSON do
       end
   end
 
-  defp data(%User{} = user) do
+  defp data(%User{} = user, token) do
     %{
+      token: token,
       id: user.id,
       username: user.username,
       email: user.email,
