@@ -3,8 +3,54 @@ defmodule TimeManagerWeb.WorkingTimeController do
 
   alias TimeManager.WorkingTimes
   alias TimeManager.WorkingTimes.WorkingTime
+  alias TimeManager.Users.User
+  alias TimeManager.Users
 
   action_fallback TimeManagerWeb.FallbackController
+
+  plug :can_index when action in [:index]
+  plug :can_update_delete_create when action in [:update, :delete, :create]
+
+  defp can_index(conn, _opts) do
+    if conn.status == 403 do render(conn, :error, message: "Not authorized") end
+
+    current_user = conn.assigns[:current_user]
+
+    case {conn.params["userID"]} do
+      {requested_user_id} when current_user.role == "general_manager" ->
+        conn
+      {requested_user_id} ->
+        case Users.get_user(requested_user_id) do
+          %User{} = requested_user when current_user.id == requested_user.id ->
+            conn
+          %User{} = requested_user when current_user.role == "manager" and requested_user.manager_id == current_user.id ->
+            conn
+          nil -> render(conn, :error, message: "Incorrect userId in request")
+          _ -> render(conn, :error, message: "Not authorized based on role")
+        end
+    end
+  end
+
+  # {if employee = false, elsif general_manager = true else{ if current_user = manager and requested_user is in team of manager = true else false }}
+  defp can_update_delete_create(conn, _opts) do
+    if conn.status == 401 do render(conn, :error, message: "Not authorized") end
+
+    current_user = conn.assigns[:current_user]
+
+    case {conn.params["userID"]} do
+      {requested_user_id} when current_user.role == "employee" ->
+        render(conn, :error, message: "Not authorized")
+      {requested_user_id} when current_user.role == "general_manager" ->
+        conn
+      {requested_user_id} ->
+        case Users.get_user(requested_user_id) do
+          %User{} = requested_user when current_user.role == "manager" and requested_user.manager_id == current_user.id ->
+            conn
+          nil -> render(conn, :error, message: "Incorrect userId in request")
+          _ -> render(conn, :error, message: "Not authorized based on role")
+        end
+    end
+  end
 
   def index(conn, %{"userID" => id, "start" => startTime, "end" => endTime}) do
     time = WorkingTimes.get_by(id, startTime, endTime)
