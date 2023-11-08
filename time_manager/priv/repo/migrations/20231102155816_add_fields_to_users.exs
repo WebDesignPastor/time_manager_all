@@ -4,7 +4,7 @@ defmodule TimeManager.Repo.Migrations.AddFieldsToUsers do
   def change do
     alter table(:users) do
       add :role, :string
-      add :teams_id, {:array, :integer}
+      add :teams_id, :integer
       add :managed_teams, {:array, :integer}
       add :manager_id, :integer 
     end

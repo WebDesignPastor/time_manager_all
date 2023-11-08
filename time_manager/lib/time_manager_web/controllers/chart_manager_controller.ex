@@ -8,12 +8,10 @@ defmodule TimeManagerWeb.ChartManagerController do
 
   def show(conn, %{"teams" => teams, "start" => startTime, "end" => endTime}) do
     users = ChartManager.get_all(teams, startTime, endTime)
-    IO.inspect(users)
     case users do
-      {:ok, [_] = user} -> render(conn, :show, users: user)
+      users -> render(conn, :references_show, users: users)
       _ -> render(conn, :error, message: "error")
     end
 
   end
-
 end

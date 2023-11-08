@@ -12,15 +12,15 @@ defmodule TimeManagerWeb.WorkingTimeController do
   end
 
   #currently send an empty array if no working time might need to change this
-  def index(conn, %{"userID" => id}) do
-    working_times = WorkingTimes.list_user_workingtimes(id)  
-    render(conn, :index, workingtimes: working_times)
-  end
+  #def index(conn, %{"userID" => id}) do
+  #  working_times = WorkingTimes.list_user_workingtimes(id)  
+  #  conn |> put_status(:not_found) |> render(:error, message: "test") 
+  #end
 
-  def show(conn, %{"userID" => user_id, "id" => id}) do
-    workingtime = WorkingTimes.get_one(user_id, id)
-    render(conn, :index, workingtimes: workingtime)
-  end
+  #def show(conn, %{"userID" => user_id, "id" => id}) do
+  #  workingtime = WorkingTimes.get_one(user_id, id)
+  #  render(conn, :index, workingtimes: workingtime)
+  #end
 
   def create(conn, %{"userID" => id, "start" => startTime, "end" => endTime}) do
     id = String.to_integer(id)

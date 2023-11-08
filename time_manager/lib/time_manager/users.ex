@@ -21,6 +21,12 @@ defmodule TimeManager.Users do
     Repo.all(User)
   end
 
+  def list_users_from_team(id) do
+    User
+    |> where(manager_id: ^id)
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single user.
 
@@ -37,6 +43,7 @@ defmodule TimeManager.Users do
   """
 
   def get_user!(id), do: Repo.get!(User, id)
+  def get_user(id), do: Repo.get(User, id)
 
   defp last_clock(user_id) do
     Clock
@@ -50,6 +57,7 @@ defmodule TimeManager.Users do
     get user by email
   """
   def get_by_email(email) do
+
     user_with_clock =
       User
       |> where(email: ^email)
@@ -88,7 +96,7 @@ defmodule TimeManager.Users do
             user |
             workingtimes: 
               case user.workingtimes do
-                [] -> nil
+                [] -> []
                 workingtimes -> 
                   Enum.filter(workingtimes, fn workingtime -> 
                     Date.compare(workingtime.start, start_of_week) != :lt and
