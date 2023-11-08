@@ -1,3 +1,8 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
 name: Elixir CI
 
 on:
@@ -18,9 +23,9 @@ jobs:
       db:
         image: postgres:13
         env:
-          POSTGRES_DB: time_manager_dev
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: ${{ secrets.PG_USER }}
+          POSTGRES_DB: ${{ secrets.PG_DATABASE }}
+          POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
         ports:
           - 5432:5432
         options: >-
@@ -46,17 +51,17 @@ jobs:
       run: cd time_manager && mix deps.get
       env:
         PGHOST: localhost
-        PGUSER: postgres
-        PGPASSWORD: postgres
-        PGDATABASE: time_manager_dev
+        POSTGRES_USER: ${{ secrets.PG_USER }}
+        POSTGRES_DB: ${{ secrets.PG_DATABASE }}
+        POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
         PGPORT: 5432
     - name: Setup DB
       run: cd time_manager && mix ecto.setup
       env:
         PGHOST: localhost
-        PGUSER: postgres
-        PGPASSWORD: postgres
-        PGDATABASE: time_manager_dev
+        POSTGRES_USER: ${{ secrets.PG_USER }}
+        POSTGRES_DB: ${{ secrets.PG_DATABASE }}
+        POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
         PGPORT: 5432
     #- name: Run tests
       #run: cd time_manager && mix test

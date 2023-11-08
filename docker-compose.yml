@@ -1,7 +1,6 @@
 version: '3'
 
 services:
-  # Backend service
   back:
     image: webdesignpastor/time_manager_back
     build:
@@ -12,9 +11,8 @@ services:
       - "4000:4000"
     depends_on:
       - db
-    command: /bin/sh -c "mix ecto.migrate && mix phx.server"
+    command: /app/entrypoint.sh
 
-  # Frontend service
   front:
     image: webdesignpastor/time_manager_front
     build:
@@ -22,7 +20,6 @@ services:
     ports:
       - "8080:8080"
 
-  # Database service
   db:
     image: postgres:latest
     environment:
