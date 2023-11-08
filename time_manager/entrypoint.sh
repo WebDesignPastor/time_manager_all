@@ -10,6 +10,9 @@ do
   echo "$(date) - waiting for database..."
   sleep 1
 done
+echo ----------------------------------
+echo "Database is ready !"
+echo ----------------------------------
 
 echo ----------------------------------
 echo "Dropping database..."
@@ -18,8 +21,9 @@ echo ----------------------------------
 mix ecto.drop
 
 echo ----------------------------------
-echo "Database is ready !"
+echo "Creating database..."
 echo ----------------------------------
+
 
 mix ecto.create
 
