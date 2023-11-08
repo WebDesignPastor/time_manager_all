@@ -16,10 +16,24 @@ echo ----------------------------------
 
 mix ecto.create
 
+echo ----------------------------------
+echo "Running database migrations..."
+echo ----------------------------------
+
 mix ecto.migrate
+
+echo ----------------------------------
+echo "Installing Phoenix dependencies..."
+echo ----------------------------------
+
+mix deps.get
+
+echo ----------------------------------
+echo "Starting Phoenix server..."
+echo ----------------------------------
 
 mix phx.server
 
-cd /app
-
-mix deps.get
+echo ----------------------------------
+echo "Phoenix server started !"
+echo ----------------------------------
