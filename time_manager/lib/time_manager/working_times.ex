@@ -27,7 +27,7 @@ defmodule TimeManager.WorkingTimes do
     end
   end
 
-  def list_workingtime, do Repo.all(WorkingTime)
+  # def list_workingtime, do Repo.all(WorkingTime)
 
   def get_working_time(id), do: Repo.get(WorkingTime, id)
 
