@@ -60,6 +60,7 @@ defmodule TimeManager.Clocks do
   def create_clock(id) do
     current_time = NaiveDateTime.local_now()
 
+    IO.inspect("create_clock")
     clock_params = %{
       start: current_time,
       status: true,

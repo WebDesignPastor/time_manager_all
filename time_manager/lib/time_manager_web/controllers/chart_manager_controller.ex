@@ -14,5 +14,4 @@ defmodule TimeManagerWeb.ChartManagerController do
     end
 
   end
-
 end

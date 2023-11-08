@@ -29,10 +29,9 @@ defmodule TimeManagerWeb.AuthController do
             }
             # generate token
             {:ok, token, _claims} = JWTToken.generate_and_sign(extra_claims, signer)
+            IO.inspect(token)
             # verify token
-            {:ok, claims} = JWTToken.verify_and_validate(token, signer)
-
-            IO.inspect(claims)
+            {:ok, _claims} = JWTToken.verify_and_validate(token, signer)
 
             render(conn, :auth, user: user, token: token)
           false -> 

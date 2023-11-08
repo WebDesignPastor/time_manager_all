@@ -7,12 +7,12 @@ defmodule TimeManager.WorkingTimes do
   alias TimeManager.Repo
 
   alias TimeManager.WorkingTimes.WorkingTime
+  alias TimeManager.Users.User
 
   def list_user_workingtimes(id) do
     WorkingTime
     |> where(user_id: ^id)
     |> Repo.all()
-
   end
   @doc """
   Returns the list of workingtimes.
@@ -56,6 +56,8 @@ defmodule TimeManager.WorkingTimes do
 
   """
   def create_working_time(id, attrs \\ %{}) do
+
+
     %WorkingTime{user_id: id}
     |> WorkingTime.changeset(attrs)
     |> Repo.insert()
