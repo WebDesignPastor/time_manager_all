@@ -3,20 +3,20 @@ import { createStore } from "vuex";
 export default createStore({
     state () {
         return {
-            currentContent: "graphs",
+            currentContent: "Dashboard",
             token: null,
-            isAuth: true,
+            isAuth: false,
             currUser: {
-                "id": 1,
-                "username": "Filip",
-                "email": "test@test.com",
-                "role": "general_manager",
-                "clock": {
-                    "start": "2023-10-26 08:00",
-                    "isClocking": false
-                }
+                "id": null,
+                "username": null,
+                "email": null,
+                "role": null,
+                "clock": null,
+                "workingtimes": null
             },
-            currWeekDisplayed: null
+            currWeekDisplayed: null,
+            usersList: null,
+            isNavOpen: false
         }
     },
     mutations: {
@@ -28,21 +28,53 @@ export default createStore({
             state.currUser.id = payload.id
             state.currUser.username = payload.username 
             state.currUser.email = payload.email
+            state.currUser.role = payload.role
+            state.currUser.clock = payload.clock
+            state.currUser.workingtimes = payload.workingTimes
             state.token = payload.token
+            state.currentContent = "Dashboard"
         },
         setCurrWeek(state, payload) {
             state.currWeekDisplayed = payload
+        },
+        resetState(state) {
+            state.currentContent = 'dashboard'
+            state.token = null
+            state.isAuth = false
+            state.currUser = {
+                "id": null,
+                "username": null,
+                "email": null,
+                "role": null,
+                "clock": null
+            },
+            state.currWeekDisplayed = null
+        },
+        setClock(state, payload) {
+            state.currUser.clock = payload
+        },
+        setNav(state) {
+            state.isNavOpen = !state.isNavOpen
         }
     },
     actions: {
         changeContent ({ commit },payload) {
             commit('setCurrentContent', payload)
         },
-        signIn ({ commit }, payload) {
+        login ({ commit }, payload) {
             commit('setSignIn', payload)
         },
         changeWeek ({ commit }, payload) {
             commit('setCurrWeek', payload)
+        },
+        logout ({ commit }, payload) {
+            commit('resetState', payload)
+        },
+        changeClock ({ commit }, payload) {
+            commit('setClock', payload)
+        },
+        changeNav ({ commit }) {
+            commit('setNav')
         }
     }
 })
