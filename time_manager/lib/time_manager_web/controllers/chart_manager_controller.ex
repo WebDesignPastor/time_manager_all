@@ -19,27 +19,16 @@ defmodule TimeManagerWeb.ChartManagerController do
     end
   end
 
-  def show(conn, %{"teams" => teams, "start" => startTime, "end" => endTime}) do
-    #current_user = conn.assigns[:current_user]
+  def show(conn, %{"start" => startTime, "end" => endTime}) do
+    current_user = conn.assigns[:current_user]
 
-
-
-    
-
-    #case current_user.role do
-    #  "manager" -> 
-    #    IO.inspect("manager")
-    #    teams = ChartManager.get_all(current_user.teams_managed, startTime, endTime)
-    #    render(conn, :references_show, teams: teams)
-    #  "general_manager" -> 
-    #    IO.inspect("general manager")
-    #    test = ChartManager.test()
-    #end
-    
-    teams = ChartManager.get_all(teams, startTime, endTime)
-    case teams do
-      teams -> render(conn, :references_show, teams: teams)
-      _ -> render(conn, :error, message: "error")
+    case current_user.role do
+      "manager" -> 
+        teams = ChartManager.get_team(current_user.teams_managed, startTime, endTime)
+        render(conn, :references_show, teams: teams)
+      "general_manager" -> 
+        teams = ChartManager.get_all(startTime, endTime)
+        render(conn, :references_show, teams: teams)
     end
   end
 end
