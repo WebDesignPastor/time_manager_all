@@ -7,8 +7,7 @@ defmodule TimeManagerWeb.UserController do
   action_fallback TimeManagerWeb.FallbackController
 
   plug :is_general_manager when action in [:index]
-  plug :is_user_requested when action in [:show, :delete]
-  plug :can_update when action in [:update]
+  plug :can_update when action in [:update, :show, :delete]
 
   defp can_update(conn, _opts) do
     if conn.status == 401 do render(conn, :error, message: "Not authorized") end
@@ -22,7 +21,7 @@ defmodule TimeManagerWeb.UserController do
         case Users.get_user(requested_user_id) do
           %User{} = requested_user when current_user.id == requested_user.id ->
             conn
-          %User{role: "employee"} when current_user.role == "manager" ->
+          %User{} = requested_user when current_user.role == "manager" and requested_user.manager_id == current_user.id ->
             conn
           nil -> render(conn, :error, message: "Incorrect userId in request")
           _ -> render(conn, :error, message: "Not authorized base on role")
@@ -30,31 +29,25 @@ defmodule TimeManagerWeb.UserController do
     end
   end
 
-  defp is_user_requested(conn, _opts) do
-    case Map.get(conn.assigns, :current_user) do
-      %User{role: "general_manager"} ->
-        conn
-      %User{} = user ->
-        user_id = Integer.to_string(user.id)
-        case conn.params do
-          %{"userID" => ^user_id} -> conn
-          _ -> render(conn, :error, message: "trying to access another user")
-        end
-      _ -> render(conn, :error, message: "not allowed")
-    end
-  end
-
   defp is_general_manager(conn, _opts) do
-    IO.inspect(conn)
-    case Map.get(conn.assigns, :current_user) do
-      %User{role: "general_manager"} ->
-        conn
+    if conn.status == 401 do render(conn, :error, message: "Not authorized") end
+
+    current_user = conn.assigns[:current_user]
+    case conn.assigns[:current_user] do
+      %User{role: "general_manager"} -> conn
+      %User{role: "manager"} -> conn
       _ -> render(conn, :error, message: "not allowed")
     end
   end
 
   def index(conn, _params) do
-    users = Users.list_users()
+    current_user = conn.assigns[:current_user]
+    users = 
+    if current_user.role != "general_manager" do
+      users = Users.list_users_from_team(current_user.id)
+    else
+      users = Users.list_users()
+    end
     render(conn, :index, users: users)
   end
 

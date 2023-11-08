@@ -21,6 +21,12 @@ defmodule TimeManager.Users do
     Repo.all(User)
   end
 
+  def list_users_from_team(id)
+    User
+    |> where(manager_id: ^id)
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single user.
 
