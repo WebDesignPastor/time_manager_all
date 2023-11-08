@@ -21,7 +21,7 @@ defmodule TimeManager.Users do
     Repo.all(User)
   end
 
-  def list_users_from_team(id)
+  def list_users_from_team(id) do
     User
     |> where(manager_id: ^id)
     |> Repo.all()
