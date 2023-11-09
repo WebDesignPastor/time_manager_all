@@ -8,6 +8,22 @@ const formatDate = (date = new Date()) => {
     return [year, month, day].join('-')
 }
 
+export const getFullRange = (startDay, endDay) => {
+    const startDate = new Date(startDay)
+    const endDate = new Date(endDay)
+    endDate.setDate(endDate.getDate() + 1)
+    const date = new Date(startDate.getTime())
+
+    const dates = []
+
+    while (date < endDate) {
+        dates.push(new Date(date))
+        date.setDate(date.getDate() + 1)
+    }
+
+    return dates
+}
+
 export const getWeek = (date) => {
     let curr = new Date(date)
     let startDate = new Date(curr.getFullYear(), 0, 1)
