@@ -293,7 +293,7 @@ export const formatDataWeeklyAverage = (data, d1, d2) => {
         
         if(index == 0) {
             for(let i = 0; i < formated.teams.length; i++) {
-                newTeams.push({id: formated.teams[i].id, name: formated.teams[i].name, value: [] })
+                newTeams.push({id: formated.teams[i].id, name: formated.teams[i].name, value: [formated.teams[i].value.reduce((j,k) => {return j + k})] })
             }
         } else {
             for(let i = 0; i < formated.teams.length; i++) {
