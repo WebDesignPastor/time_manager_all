@@ -10,6 +10,7 @@ defmodule TimeManagerWeb.JWTAuthPlug do
     if bearer == nil do
       conn |> put_status(403)
     else
+      IO.inspect("test")
       token = bearer |> String.split(" ") |> List.last()
       signer = Joken.Signer.create("HS256", "NmM2Hu2tANjmiA2PeEugci8VbyXsvO6ObEFryrkbpoBycc6N9IJT7NHdo16bBGx3")
 
