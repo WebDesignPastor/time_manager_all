@@ -4,6 +4,12 @@ cd /app
 
 mix ecto.setup
 
+mix deps.get
+
+echo ----------------------------------
+echo "Starting Phoenix server..."
+echo ----------------------------------
+
 # waiting the database
 while ! pg_isready -h $PGHOST -p $PGPORT -q -U $PGUSER
 do
@@ -35,12 +41,6 @@ mix ecto.migrate
 
 echo ----------------------------------
 echo "Installing Phoenix dependencies..."
-echo ----------------------------------
-
-mix deps.get
-
-echo ----------------------------------
-echo "Starting Phoenix server..."
 echo ----------------------------------
 
 mix phx.server
