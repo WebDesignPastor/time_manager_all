@@ -35,8 +35,8 @@ defmodule TimeManagerWeb.Router do
   scope "/api", TimeManagerWeb do
     pipe_through :api
     
-    post "/users/:userID", UserController, :new
     post "/users/login", AuthController, :login, as: :login
+    post "/users", UserController, :create
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
