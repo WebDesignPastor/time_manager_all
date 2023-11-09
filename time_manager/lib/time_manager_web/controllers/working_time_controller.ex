@@ -72,11 +72,9 @@ defmodule TimeManagerWeb.WorkingTimeController do
     id = String.to_integer(id)
     working_time_params = %{start: startTime, end: endTime}
 
-    with {:ok, %WorkingTime{} = working_time} <- WorkingTimes.create_working_time(id, working_time_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", ~p"/api/workingtimes/#{working_time}")
-      |> render(:index, workingtimes: working_time)
+    case WorkingTimes.create_working_time(id, working_time_params) do
+      nil -> render(conn, :error, message: "couldn't create working_time") 
+      _ = working_time -> render(conn, :index, workingtimes: working_time)
     end
   end
 
