@@ -4,8 +4,6 @@ cd /app
 
 mix ecto.setup
 
-mix deps.get
-
 echo ----------------------------------
 echo "Starting Phoenix server..."
 echo ----------------------------------
@@ -21,15 +19,8 @@ echo "Database is ready !"
 echo ----------------------------------
 
 echo ----------------------------------
-echo "Dropping database..."
-echo ----------------------------------
-
-mix ecto.drop
-
-echo ----------------------------------
 echo "Creating database..."
 echo ----------------------------------
-
 
 mix ecto.create
 

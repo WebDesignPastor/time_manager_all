@@ -7,7 +7,8 @@ WORKDIR /app
 COPY . /app
 
 RUN mix local.hex --force && \
-    mix local.rebar --force
+    mix local.rebar --force && \
+    mix deps.get
 
 EXPOSE 4000
 
