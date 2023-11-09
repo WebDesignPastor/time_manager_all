@@ -38,6 +38,10 @@ echo ----------------------------------
 mix run priv/repo/seeds.exs
 
 echo ----------------------------------
+echo "seeds.exs executed!"
+echo ----------------------------------
+
+echo ----------------------------------
 echo "Phoenix server is starting..."
 echo ----------------------------------
 
