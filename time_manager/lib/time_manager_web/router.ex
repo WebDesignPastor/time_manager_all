@@ -12,13 +12,16 @@ defmodule TimeManagerWeb.Router do
     plug :protect_from_forgery
   end
 
+  pipeline :auth do
+    plug TimeManagerWeb.JWTAuthPlug
+  end
+
   scope "/api", TimeManagerWeb do
-    pipe_through [:api]
+    pipe_through [:api, :auth]
     # commented to remove csrf protection
     # pipe_through [:api, :csrf]
 
-    resources "/users", UserController, param: "userID", except: [:new, :edit]
-    post "/users/sign_up", AuthController, :sign_up
+    resources "/users", UserController, param: "userID", except: [:edit]
     post "/users/logout", AuthController, :logout 
   
     resources "/workingtimes/:userID", WorkingTimeController, only: [:index, :create, :show]
@@ -33,6 +36,7 @@ defmodule TimeManagerWeb.Router do
     pipe_through :api
     
     post "/users/login", AuthController, :login, as: :login
+    post "/users", UserController, :create
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development

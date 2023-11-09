@@ -20,7 +20,7 @@ jobs:
         USER: ${{ secrets.EC2_USER }}
         PGUSER: ${{ secrets.PG_USER }}
         PGPASSWORD: ${{ secrets.PG_PASSWORD }}
-        PGDATABASE: ${{ secrets.PGD_ATABASE }}
+        PGDATABASE: ${{ secrets.PG_DATABASE }}
       run: |
         # Save private key to file
         echo "$PRIVATE_KEY" > private_key.pem

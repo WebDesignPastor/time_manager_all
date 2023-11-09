@@ -6,6 +6,8 @@ defmodule TimeManager.WorkingTimes do
   alias TimeManager.Repo
   alias TimeManager.Users
   alias TimeManager.WorkingTimes.WorkingTime
+  alias TimeManager.Users.User
+  alias TimeManager.Users
 
   #------ INDEX ---------------------
   def list_user_workingtimes(id) do
@@ -14,17 +16,29 @@ defmodule TimeManager.WorkingTimes do
         {:error, :user_not_found}
       user ->
         working_times =
-        WorkingTime |> where(user_id: ^id) |> Repo.all()
-        IO.inspect(working_times)
+        WorkingTime
+        |> where(user_id: ^id)
+        |> Repo.all()
+
         case working_times do
           working_times ->
-            IO.inspect('Tableau non vide')
             {:ok, working_times}
           _ ->
-            IO.inspect('tableau vide')
             {:error, :workingtime_not_found}
         end
     end
+  end
+  @doc """
+  Returns the list of workingtimes.
+
+  ## Examples
+
+      iex> list_workingtimes()
+      [%WorkingTime{}, ...]
+
+  """
+  def list_workingtimes do
+    Repo.all(WorkingTime)
   end
 
   # def list_workingtime, do Repo.all(WorkingTime)
@@ -47,11 +61,22 @@ defmodule TimeManager.WorkingTimes do
 
   def create_working_time(id, attrs \\ %{}) do
     case Users.get_user(id) do
-      nil -> {:error, :user_not_found}
-      user ->
-        %WorkingTime{user_id: id}
+      nil -> {}
+      %User{} = user ->
+        %WorkingTime{user_id: user.id}
         |> WorkingTime.changeset(attrs)
         |> Repo.insert()
+
+        start_week = Date.beginning_of_week(NaiveDateTime.from_iso8601!(attrs.start), :sunday)
+        end_week = Date.end_of_week(NaiveDateTime.from_iso8601!(attrs.end), :sunday)
+
+        startTime = NaiveDateTime.new!(start_week, ~T[00:00:00])
+        endTime = NaiveDateTime.new!(end_week, ~T[23:59:59])
+
+        case get_by(id, startTime, endTime) do
+          nil -> nil
+          _ = workingtimes -> workingtimes
+        end
     end
   end
 
