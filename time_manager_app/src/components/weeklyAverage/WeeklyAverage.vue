@@ -12,6 +12,32 @@ export default {
     components: {
         GChart
     },
+    data() {
+        return {
+            teamsDisplayed: '1',
+            teamsToDisplay: [1],
+            teamsAlreadyDisplayed: [1],
+            dateRangeStart: '',
+            dateRangeEnd: '',
+            isComboChart: false,
+            teams: [],
+            chartData: [],
+            averageClocksHours: [],
+            chartOptions: {
+                legend: 'none',
+                vAxis: { minValue: 0 },
+                chartArea: { width: '85%', height: '65%' },
+                seriesType: 'bars',
+                series: '',
+                'backgroundColor': {
+                    'fill': 'C4C3AA',
+                    'opacity': 100
+                },
+            },
+            chartType: 'ColumnChart',
+            isDataLoaded: false
+        }
+    },
     mounted() {
         this.init()
     },
@@ -97,41 +123,15 @@ export default {
             let res = await ApiPost('/chartmanager', body, this.$store.state.token)
             if (res.status === 200) {
                 let val = formatDataWeeklyAverage(dataExample.teams, days.startDate, days.endDate)
-                console.log(val)
-                this.teams = val['teams']
-                this.chartData = val['chartData']
-                this.avegareClockHours = val['averageClocks']
+                console.log(val.averageClocks)
+                this.teams = val.teams
+                this.chartData = val.chartData
+                this.avegareClockHours = val.averageClocks
                 console.log(this.averageClocksHours)
                 console.log(this.teams)
                 console.log(this.chartData)
                 this.isDataLoaded = true
             }
-        }
-    },
-    data() {
-        return {
-            teamsDisplayed: '1',
-            teamsToDisplay: [1],
-            teamsAlreadyDisplayed: [1],
-            dateRangeStart: '',
-            dateRangeEnd: '',
-            isComboChart: false,
-            teams: [],
-            chartData: [],
-            averageClocksHours: [],
-            chartOptions: {
-                legend: 'none',
-                vAxis: { minValue: 0 },
-                chartArea: { width: '85%', height: '65%' },
-                seriesType: 'bars',
-                series: '',
-                'backgroundColor': {
-                    'fill': 'C4C3AA',
-                    'opacity': 100
-                },
-            },
-            chartType: 'ColumnChart',
-            isDataLoaded: false
         }
     }
 }

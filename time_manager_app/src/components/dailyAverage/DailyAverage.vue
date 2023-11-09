@@ -11,6 +11,30 @@ export default {
     components: {
         GChart
     },
+    data() {
+        return {
+            teams: [],
+            teamsToDisplay: [1],
+            teamsAlreadyDisplayed: [1],
+            dateRangeStart: '',
+            dateRangeEnd: '',
+            isComboChart: false,
+            chartData: [],  
+            averageClocksHours: [],
+            chartOptions: {
+                legend: 'none',
+                vAxis: { minValue: 0 },
+                chartArea: { width: '85%', height: '65%' },
+                seriesType: 'bars',
+                series: '',
+                'backgroundColor': {
+                    'fill': 'BAB6C1',
+                    'opacity': 100
+                },
+            },
+            chartType: 'ColumnChart'
+        }
+    },
     mounted() {
         this.init()
     },
@@ -99,30 +123,6 @@ export default {
                 this.chartData = val['chartData']
                 this.avegareClockHours = val['averageClocks']
             }
-        }
-    },
-    data() {
-        return {
-            teams: [],
-            teamsToDisplay: [1],
-            teamsAlreadyDisplayed: [1],
-            dateRangeStart: '',
-            dateRangeEnd: '',
-            isComboChart: false,
-            chartData: [],  
-            averageClocksHours: [],
-            chartOptions: {
-                legend: 'none',
-                vAxis: { minValue: 0 },
-                chartArea: { width: '85%', height: '65%' },
-                seriesType: 'bars',
-                series: '',
-                'backgroundColor': {
-                    'fill': 'BAB6C1',
-                    'opacity': 100
-                },
-            },
-            chartType: 'ColumnChart'
         }
     }
 }
