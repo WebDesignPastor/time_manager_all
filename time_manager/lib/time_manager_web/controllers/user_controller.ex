@@ -78,16 +78,28 @@ defmodule TimeManagerWeb.UserController do
     current_user_role = conn.assigns.current_user.role 
     user_params = user_params
 
+    user_params =
+    case user_params["role"] do
+      #demotion
+      "employee" when user.role == "manager" -> 
+        user_params = Map.put(user_params, "managed_teams", nil)
+      #promotion
+      "manager" when user.role == "employee" ->
+        user_params = Map.put(user_params, "manager_id", nil)
+        user_params = Map.put(user_params, "teams_id", nil)
+      _ -> user_params
+    end
+
     #problem because the manager_id is not set by the back here a manager can be set for a user with a different teams  
     allowed_fields =
-    case current_user_role do
-      "manager" ->
-        allowed_fields = ["email", "username", "password", "teams_id"]
-      "general_manager" ->
-        allowed_fields = ["email", "username", "password", "teams_id", "manager_id", "managed_teams", "role"]
-      _ ->
-        allowed_fields = ["email", "username", "password"]
-    end
+      case current_user_role do
+        "manager" ->
+          allowed_fields = ["email", "username", "password", "teams_id"]
+        "general_manager" ->
+          allowed_fields = ["email", "username", "password", "teams_id", "manager_id", "managed_teams", "role"]
+        _ ->
+          allowed_fields = ["email", "username", "password"]
+      end
 
     filtered_params = Map.take(user_params, allowed_fields)
 
