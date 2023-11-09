@@ -73,6 +73,7 @@ defmodule TimeManager.Clocks do
 
   def create_clock!(id, startTime, endTime, status) do
     clock_params = %{start: startTime, end: endTime, status: status}
+
     %Clock{user_id: id}
     |> Clock.changeset(clock_params)
     |> Repo.insert()
@@ -93,15 +94,25 @@ defmodule TimeManager.Clocks do
   def update_last_clock(%Clock{} = clock) do
     current_time = NaiveDateTime.local_now()
 
-    clock_params =
-    case NaiveDateTime.to_date(current_time) != NaiveDateTime.to_date(clock.start) do
-      true -> %{status: false, end: NaiveDateTime.new(NaiveDateTime.to_date(clock.start), ~T[23:59:59])}
-      false -> %{status: false, end: current_time}
-    end
+    date_start = NaiveDateTime.to_date(clock.start)
+    date_today = NaiveDateTime.to_date(current_time)
 
-    clock
-    |> Clock.changeset(clock_params)
-    |> Repo.update()
+    case date_today != date_start do
+      true -> 
+          date_start_time_end = NaiveDateTime.new!(date_start, ~T[23:59:59])
+          clock
+          |> Clock.changeset(%{status: false, end: date_start_time_end})
+          |> Repo.update()
+
+          date_start_time_start = NaiveDateTime.new!(date_today, ~T[00:00:00])
+          create_clock!(clock.user_id, date_start_time_start, current_time, false)
+      false -> 
+        clock_params = %{status: false, end: current_time}
+
+        clock
+        |> Clock.changeset(clock_params)
+        |> Repo.update()
+    end
   end
 
   def update_clock(%Clock{} = clock, attrs) do

@@ -108,7 +108,7 @@ defmodule TimeManager.Users do
     end
   end
 
-  defp find_current_week() do
+  def find_current_week() do
     {current_date, _ }  = :calendar.universal_time()
 
     {_, today} = Date.from_erl(current_date)
