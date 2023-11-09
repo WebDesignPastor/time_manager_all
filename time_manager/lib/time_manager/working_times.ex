@@ -8,6 +8,7 @@ defmodule TimeManager.WorkingTimes do
 
   alias TimeManager.WorkingTimes.WorkingTime
   alias TimeManager.Users.User
+  alias TimeManager.Users
 
   def list_user_workingtimes(id) do
     WorkingTime
@@ -56,11 +57,21 @@ defmodule TimeManager.WorkingTimes do
 
   """
   def create_working_time(id, attrs \\ %{}) do
-
-
-    %WorkingTime{user_id: id}
-    |> WorkingTime.changeset(attrs)
-    |> Repo.insert()
+    case Users.get_user(id) do
+      nil -> {}
+      %User{} = user ->
+        %WorkingTime{user_id: user.id}
+        |> WorkingTime.changeset(attrs)
+        |> Repo.insert()
+        start_week = Date.beginning_of_week(NaiveDateTime.from_iso8601!(attrs.start), :sunday)
+        end_week = Date.end_of_week(NaiveDateTime.from_iso8601!(attrs.end), :sunday)
+        startTime = NaiveDateTime.new!(start_week, ~T[00:00:00])
+        endTime = NaiveDateTime.new!(end_week, ~T[23:59:59])
+        case get_by(id, startTime, endTime) do
+          nil -> nil
+          _ = workingtimes -> workingtimes
+        end
+    end
   end
 
   @doc """
