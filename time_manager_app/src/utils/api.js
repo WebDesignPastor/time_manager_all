@@ -1,7 +1,6 @@
 import axios from "axios"
 
-let apiUrl = JSON.stringify(import.meta.env.VITE_BASE_API_URL)
-console.log(apiUrl)
+let apiUrl = import.meta.env.VITE_BASE_API_URL
 
 export const ApiGet = async (url, token) => {
     let isAuthNeeded = false
@@ -22,7 +21,7 @@ export const ApiGet = async (url, token) => {
     }
 }
 
-export const ApiPost = async (url, body, token) => {
+export const ApiPost = async (url, body, token) => {    
     let isAuthNeeded = false
     if(token !== null && token !== undefined) {
         isAuthNeeded = true

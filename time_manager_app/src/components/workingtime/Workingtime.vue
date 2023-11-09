@@ -25,7 +25,6 @@ export default {
         this.$store.dispatch('changeWeek', value).then(() => {
           this.isLoaded = true
         })
-        // ajouter l'appel pour avoir les données et les tranformer ici
       } else {
         this.isLoaded = true
       }
@@ -56,7 +55,7 @@ export default {
           'fill': this.bgColor,
           'opacity': 100
         },
-        chartArea: {'width': '90%', 'height': '60%'},
+        chartArea: {'width': '90%', 'height': '80%'},
         vAxis: {
           ticks: [6, 8, 10, 12, 14, 16, 18, 20]
         },

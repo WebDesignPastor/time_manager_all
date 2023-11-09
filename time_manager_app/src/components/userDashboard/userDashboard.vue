@@ -4,9 +4,8 @@ import Summary from '../summary/Summary.vue';
 import Random from '../random/Random.vue'
 import Workingtime from '../workingtime/Workingtime.vue';
 import DashboardGraph from '../dashboardGraph/DashboardGraph.vue';
-import { customToolTip, workingTimeDataFormat } from '../../utils/chart'
+import { workingTimeDataFormat } from '../../utils/chart'
 import { getWeekFromDate } from '../../utils/date'
-import { ApiGet } from '../../utils/api';
 
 export default {
     name: 'UserDashboard',

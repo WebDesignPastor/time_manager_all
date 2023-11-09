@@ -7,7 +7,7 @@ import Workingtime from '../workingtime/Workingtime.vue';
 import DashboardGraph from '../dashboardGraph/DashboardGraph.vue';
 import { customToolTip, workingTimeDataFormat } from '../../utils/chart'
 import { ApiGet, ApiPost } from '../../utils/api';
-import { getWeekFromDate } from '../../utils/date'
+import { getWeek, getWeekFromDate } from '../../utils/date'
 
 export default {
     name: 'EmployeeChart',
@@ -37,7 +37,7 @@ export default {
             usersList: null,
             userIdView: null,
             isUserDashboard: false,
-            bgColor2: '#BFB293',
+            bgColor2: '#BFB293'
         }
     },
     methods: {
@@ -48,20 +48,28 @@ export default {
             })
         },
         async employeeView(e) {
-            this.isInitialized = false
-            this.userIdView = e.target.value
-            let formatedDate = getWeekFromDate(new Date())
-            let newUrl = formatedDate['url']
-            let res = await ApiGet(`/workingtimes/${this.userIdView}?${newUrl}`, this.$store.state.token)
-            let toDisplay = workingTimeDataFormat(res, formatedDate['days'])
-            this.chartData = toDisplay
-            this.$store.dispatch('changeFocus', this.userIdView)
-            if(this.isUserDashboard) {
-                this.$store.dispatch('changeFocusDashboard').then(() => {
-                        this.isUserDashboard = false
-                })
+            if(e.target.value !== '') {
+                this.isInitialized = false
+                this.userIdView = e.target.value
+                let formatedDate = getWeekFromDate(new Date())
+                let newUrl = formatedDate['url']
+                let res = await ApiGet(`/workingtimes/${this.userIdView}?${newUrl}`, this.$store.state.token)
+                let toDisplay = workingTimeDataFormat(res, formatedDate['days'])
+                this.chartData = toDisplay
+                this.$store.dispatch('changeFocus', this.userIdView)
+                if(this.isUserDashboard) {
+                    this.$store.dispatch('changeFocusDashboard').then(() => {
+                            this.isUserDashboard = false
+                    })
+                }
+                this.isLoaded = true
+                this.isInitialized = true
+            } else {
+                if(this.isUserDashboard) {
+                    this.isUserDashboard = !this.isUserDashboard
+                }
+                this.isInitialized = false
             }
-            this.isInitialized = true
         },
         modalOpener() {
             this.modalOpen = !this.modalOpen
@@ -89,8 +97,10 @@ export default {
                             start: start,
                             end: end,
                         }
+                        let newWeek = getWeek(new Date(start))
                         let userId = this.$store.state.userFocus.id
                         let res = await ApiPost(`/workingtimes/${userId}`, body, this.$store.state.token)
+                        this.$store.dispatch('changeWeek', newWeek)
                         this.modalOpen = false
                     } else if (this.modalEndHour < this.modalStartHour) {
                         // display error msg
