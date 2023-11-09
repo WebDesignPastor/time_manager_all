@@ -51,7 +51,7 @@ defmodule TimeManagerWeb.ChartManagerJSON do
   defp clocks_data(clocks) do
       case clocks do
         nil -> nil
-        _ -> for(clock <- clocks, do: %{start: clock.start, end: clock.end, status: clock.status})
+        _ -> for(clock <- clocks, do: %{id: clock.id, start: clock.start, end: clock.end, status: clock.status})
       end
   end
 
