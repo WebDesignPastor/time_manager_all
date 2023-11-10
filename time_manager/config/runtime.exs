@@ -21,13 +21,13 @@ if System.get_env("PHX_SERVER") do
 end
 
 if config_env() == :prod do
-  database_url =
-    System.get_env("DATABASE_URL") ||
-      raise """
-      environment variable DATABASE_URL is missing.
-      For example: ecto://USER:PASS@HOST/DATABASE
-      """
-
+  # database_url =
+  #   System.get_env("DATABASE_URL") ||
+  #     raise """
+  #     environment variable DATABASE_URL is missing.
+  #     For example: ecto://USER:PASS@HOST/DATABASE
+  #     """
+  database_url = "ecto://postgres:postgres@ec2-35-180-189-24.eu-west-3.compute.amazonaws.com:5432/time_manager_dev"
   maybe_ipv6 = if System.get_env("ECTO_IPV6") in ~w(true 1), do: [:inet6], else: []
 
   config :time_manager, TimeManager.Repo,
@@ -35,7 +35,6 @@ if config_env() == :prod do
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "20"),
     socket_options: maybe_ipv6,
-    database: System.get_env("PGDATABASE")
 
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
