@@ -39,7 +39,7 @@ for n <- 1..30 do
 
   manager_id =
     if role == "employee" do
-      1
+      0
     else
       nil
     end
