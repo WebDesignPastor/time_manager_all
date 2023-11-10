@@ -142,6 +142,12 @@ defmodule TimeManager.Users do
     |> Repo.insert()
   end
 
+  def create_user_seed!(attr) do
+    %User{}
+    |> User.changeset(attr)
+    |> Repo.insert()
+  end
+
   @doc """
   Updates a user.
 

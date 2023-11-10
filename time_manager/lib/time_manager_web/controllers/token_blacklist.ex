@@ -1,12 +1,18 @@
 defmodule TimeManager.TokenBlacklist do
-  @blacklist %{}
+
+  import Ecto.Query, warn: false
+  alias TimeManager.Repo
+  alias TimeManager.JwtBlacklist
 
   def add_to_blacklist(token) do
-    @blacklist = Map.put(@blacklist, token, :blacklisted)
+    %JwtBlacklist{}
+    |> JwtBlacklist.changeset(%{token: token}) 
+    |> Repo.insert()
   end
 
   def token_blacklisted?(token) do
-    Map.has_key?(@blacklist, token)
+    JwtBlacklist
+    |> where(token: ^token)
+    |> Repo.one()
   end
 end
-

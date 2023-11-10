@@ -3,6 +3,7 @@ defmodule TimeManagerWeb.JWTAuthPlug do
   alias TimeManager.Users
   alias TimeManager.Users.User
   alias TimeManager.TokenBlacklist
+  alias TimeManager.JwtBlacklist
 
   def init(opts), do: opts
 
@@ -13,8 +14,8 @@ defmodule TimeManagerWeb.JWTAuthPlug do
     else
       token = bearer |> String.split(" ") |> List.last()
       case TokenBlacklist.token_blacklisted?(token) do
-        true -> conn |> put_status(403) |> send_resp(:unauthorized, "Token is blacklisted") |> halt()
-        false -> conn
+        %JwtBlacklist{} -> conn |> put_status(403) |> send_resp(:unauthorized, "Token is blacklisted") |> halt()
+        nil -> conn
       end
 
       signer = Joken.Signer.create("HS256", "NmM2Hu2tANjmiA2PeEugci8VbyXsvO6ObEFryrkbpoBycc6N9IJT7NHdo16bBGx3")
@@ -34,7 +35,7 @@ defmodule TimeManagerWeb.JWTAuthPlug do
   end
 
   defp valid_expiration?(exp) do
-    now = System.system_time(:seconds)
+    now = System.system_time(:second)
     exp > now
   end
 end

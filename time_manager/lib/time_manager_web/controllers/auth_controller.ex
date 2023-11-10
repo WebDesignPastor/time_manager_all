@@ -4,6 +4,7 @@ defmodule TimeManagerWeb.AuthController do
   alias TimeManager.Users
   alias TimeManager.Users.User
   alias TimeManagerWeb.JWTToken
+  alias TimeManager.TokenBlacklist
 
   action_fallback TimeManagerWeb.FallbackController
 
@@ -41,11 +42,12 @@ defmodule TimeManagerWeb.AuthController do
     end
   end
 
-  def logout(conn, token) do
+  def logout(conn, _params) do
     bearer = Plug.Conn.get_req_header(conn,  "authorization") |> List.first()
     if bearer != nil do
+      token = bearer |> String.split(" ") |> List.last()
       TokenBlacklist.add_to_blacklist(token)
-      conn |> put_status(200) |> send_resp(:success, "signed out")
+      conn |> put_status(200) |> send_resp(:ok, "signed out")
     end
   end
 end 
