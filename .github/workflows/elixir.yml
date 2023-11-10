@@ -63,11 +63,3 @@ jobs:
         POSTGRES_DB: ${{ secrets.PG_DATABASE }}
         POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
         PGPORT: 5432
-    #- name: Run tests
-      #run: cd time_manager && mix test
-      #env:
-        #PGHOST: localhost
-        #PGUSER: postgres
-        #PGPASSWORD: postgres
-        #PGDATABASE: time_manager_dev
-        #PGPORT: 5432
