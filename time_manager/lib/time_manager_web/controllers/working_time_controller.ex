@@ -3,6 +3,7 @@ defmodule TimeManagerWeb.WorkingTimeController do
 
   alias TimeManager.WorkingTimes
   alias TimeManager.WorkingTimes.WorkingTime
+  alias TimeManager.FallbackController
   alias TimeManager.Users.User
   alias TimeManager.Users
 
@@ -53,15 +54,11 @@ defmodule TimeManagerWeb.WorkingTimeController do
   end
 
   def index(conn, %{"userID" => id, "start" => startTime, "end" => endTime}) do
-    time = WorkingTimes.get_by(id, startTime, endTime)
-    render(conn, :index, workingtimes: time)
+    case WorkingTimes.get_by(id, startTime, endTime) do
+      nil -> conn |> put_status(:not_found) |> render(:error, message: "Workingtime not found")
+      _ = working_times -> render(conn, :index, workingtimes: working_times)
+    end
   end
-
-  #currently send an empty array if no working time might need to change this
-  #def index(conn, %{"userID" => id}) do
-  #  working_times = WorkingTimes.list_user_workingtimes(id)  
-  #  conn |> put_status(:not_found) |> render(:error, message: "test") 
-  #end
 
   #def show(conn, %{"userID" => user_id, "id" => id}) do
   #  workingtime = WorkingTimes.get_one(user_id, id)
@@ -73,25 +70,34 @@ defmodule TimeManagerWeb.WorkingTimeController do
     working_time_params = %{start: startTime, end: endTime}
 
     case WorkingTimes.create_working_time(id, working_time_params) do
-      nil -> render(conn, :error, message: "couldn't create working_time") 
-      _ = working_time -> render(conn, :index, workingtimes: working_time)
+      nil -> conn |> put_status(:internal_server_error) |> render(:error, message: "couldn't create working_time") 
+      %Ecto.Changeset{} -> conn |> put_status(:unprocessable_entity) |> render(:error, message: "Invalid format")
+      _ = working_time -> conn |> put_status(:created) |> put_resp_header("location", ~p"/api/workingtimes/#{working_time}") |> render(conn, working_times: working_time)
     end
   end
 
   def update(conn, %{"id" => id, "start" => startTime, "end" => endTime}) do
-    working_time = WorkingTimes.get_working_time!(id)
-    working_time_params = %{start: startTime, end: endTime}
-
-    with {:ok, %WorkingTime{} = working_time} <- WorkingTimes.update_working_time(working_time, working_time_params) do
-      render(conn, :index, workingtimes: working_time)
+    working_time = WorkingTimes.get_working_time(id)
+    case working_time do
+      nil ->
+        conn |> put_status(:not_found) |> render("error.json", message: "Workingtime not found")
+      {:ok, working_time} ->
+        working_time_params = %{start: startTime, end: endTime}
+        with {:ok, %WorkingTime{} = working_time} <- WorkingTimes.update_working_time(working_time, working_time_params) do
+          render(conn, :index, workingtimes: working_time)
+        end
     end
   end
 
   def delete(conn, %{"id" => id}) do
-    working_time = WorkingTimes.get_working_time!(id)
-
-    with {:ok, %WorkingTime{}} <- WorkingTimes.delete_working_time(working_time) do
-      send_resp(conn, :no_content, "")
+    working_time = WorkingTimes.get_working_time(id)
+    case working_time do
+      nil ->
+        conn |> put_status(:not_found) |> render("error.json", message: "Workingtime not found")
+      _ ->
+        with {:ok, %WorkingTime{}} <- WorkingTimes.delete_working_time(working_time) do
+          send_resp(conn, :no_content, "")
+        end
     end
   end
 end
