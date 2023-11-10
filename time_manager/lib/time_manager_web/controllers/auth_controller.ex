@@ -41,7 +41,11 @@ defmodule TimeManagerWeb.AuthController do
     end
   end
 
-  def logout(conn, _params) do
-    render(conn, :error, message: "sign_out not working")
+  def logout(conn, token) do
+    bearer = Plug.Conn.get_req_header(conn,  "authorization") |> List.first()
+    if bearer != nil do
+      TokenBlacklist.add_to_blacklist(token)
+      conn |> put_status(200) |> send_resp(:success, "signed out")
+    end
   end
 end 
