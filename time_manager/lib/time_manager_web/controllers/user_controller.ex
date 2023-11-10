@@ -15,7 +15,7 @@ defmodule TimeManagerWeb.UserController do
     current_user = conn.assigns[:current_user]
 
     case {conn.params["userID"]} do
-      {requested_user_id} when current_user.role == "general_manager" ->
+      {_requested_user_id} when current_user.role == "general_manager" ->
         conn
       {requested_user_id} ->
         case Users.get_user(requested_user_id) do
@@ -32,7 +32,6 @@ defmodule TimeManagerWeb.UserController do
   defp is_general_manager(conn, _opts) do
     if conn.status == 401 do render(conn, :error, message: "Not authorized") end
 
-    current_user = conn.assigns[:current_user]
     case conn.assigns[:current_user] do
       %User{role: "general_manager"} -> conn
       %User{role: "manager"} -> conn
@@ -44,9 +43,9 @@ defmodule TimeManagerWeb.UserController do
     current_user = conn.assigns[:current_user]
     users = 
     if current_user.role != "general_manager" do
-      users = Users.list_users_from_team(current_user.id)
+      Users.list_users_from_team(current_user.id)
     else
-      users = Users.list_users()
+      Users.list_users()
     end
     render(conn, :index, users: users)
   end
@@ -54,7 +53,6 @@ defmodule TimeManagerWeb.UserController do
   # error messages already set with constraint error / may need to edit it's formating
   def create(conn, %{"username" => username, "email" => email, "password" => password}) do
     with {:ok, %User{} = user} <- Users.create_user(username, email, password) do
-      IO.puts('test')
       conn
       |> put_status(:created)
       |> put_resp_header("location", ~p"/api/users/#{user}")
@@ -96,11 +94,11 @@ defmodule TimeManagerWeb.UserController do
     allowed_fields =
       case current_user_role do
         "manager" ->
-          allowed_fields = ["email", "username", "password", "teams_id"]
+          ["email", "username", "password", "teams_id"]
         "general_manager" ->
-          allowed_fields = ["email", "username", "password", "teams_id", "manager_id", "managed_teams", "role"]
+          ["email", "username", "password", "teams_id", "manager_id", "managed_teams", "role"]
         _ ->
-          allowed_fields = ["email", "username", "password"]
+          ["email", "username", "password"]
       end
 
     filtered_params = Map.take(user_params, allowed_fields)

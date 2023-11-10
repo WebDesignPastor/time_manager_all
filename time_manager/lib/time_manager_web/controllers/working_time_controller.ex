@@ -3,11 +3,8 @@ defmodule TimeManagerWeb.WorkingTimeController do
 
   alias TimeManager.WorkingTimes
   alias TimeManager.WorkingTimes.WorkingTime
-  alias TimeManager.FallbackController
   alias TimeManager.Users.User
   alias TimeManager.Users
-
-  action_fallback TimeManagerWeb.FallbackController
 
   plug :can_index when action in [:index]
   plug :can_update_delete_create when action in [:update, :delete, :create]
@@ -18,7 +15,7 @@ defmodule TimeManagerWeb.WorkingTimeController do
     current_user = conn.assigns[:current_user]
 
     case {conn.params["userID"]} do
-      {requested_user_id} when current_user.role == "general_manager" ->
+      {_requested_user_id} when current_user.role == "general_manager" ->
         conn
       {requested_user_id} ->
         case Users.get_user(requested_user_id) do
@@ -39,9 +36,9 @@ defmodule TimeManagerWeb.WorkingTimeController do
     current_user = conn.assigns[:current_user]
 
     case {conn.params["userID"]} do
-      {requested_user_id} when current_user.role == "employee" ->
+      {_requested_user_id} when current_user.role == "employee" ->
         render(conn, :error, message: "Not authorized")
-      {requested_user_id} when current_user.role == "general_manager" ->
+      {_requested_user_id} when current_user.role == "general_manager" ->
         conn
       {requested_user_id} ->
         case Users.get_user(requested_user_id) do

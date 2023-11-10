@@ -4,6 +4,7 @@ defmodule TimeManagerWeb.ClockController do
   alias TimeManager.Clocks
   alias TimeManager.Clocks.Clock
   alias TimeManager.Users.User
+  alias TimeManager.Users
 
   action_fallback TimeManagerWeb.FallbackController
 
@@ -20,7 +21,7 @@ defmodule TimeManagerWeb.ClockController do
   
   defp authorize_user_request_by_role(conn, current_user) do
     case {conn.params["userID"]} do
-      {requested_user_id} when current_user.role == "general_manager" ->
+      {_requested_user_id} when current_user.role == "general_manager" ->
         conn
       {requested_user_id} ->
         case Users.get_user(requested_user_id) do

@@ -1,9 +1,5 @@
 defmodule TimeManagerWeb.ChartManagerJSON do
 
-  alias TimeManager.Users.User
-  alias TimeManager.Clocks.Clock
-  alias TimeManager.WorkingTimes.WorkingTime
-
   def error(%{message: message}) do
     %{error: message} 
   end
@@ -55,22 +51,22 @@ defmodule TimeManagerWeb.ChartManagerJSON do
       end
   end
 
-  defp references_data(%User{} = user) do
-    %{
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      role: user.role,
-      managerId: user.manager_id,
-      teamsId: user.teams_id,
-      managedTeams: user.managed_teams,
-      workingTimes: workingtimes_data(user.workingtimes),
-      clock: clocks_data(user.clocks) 
-    }
-  end
+  #defp references_data(%User{} = user) do
+  #  %{
+  #    id: user.id,
+  #    username: user.username,
+  #    email: user.email,
+  #    role: user.role,
+  #    managerId: user.manager_id,
+  #    teamsId: user.teams_id,
+  #    managedTeams: user.managed_teams,
+  #    workingTimes: workingtimes_data(user.workingtimes),
+  #    clock: clocks_data(user.clocks) 
+  #  }
+  #end
 
-  def show(%{users: users}) do
+  #def show(%{users: users}) do
     #for(user <- users, do: user_data(user))
-  end
+  #end
 
 end

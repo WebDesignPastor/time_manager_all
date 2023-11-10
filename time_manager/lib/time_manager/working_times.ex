@@ -14,17 +14,16 @@ defmodule TimeManager.WorkingTimes do
     case Users.get_user(id) do
       nil ->
         {:error, :user_not_found}
-      user ->
+      _user ->
         working_times =
         WorkingTime
         |> where(user_id: ^id)
         |> Repo.all()
 
         case working_times do
+          nil -> {:error, :workingtime_not_found}
           working_times ->
             {:ok, working_times}
-          _ ->
-            {:error, :workingtime_not_found}
         end
     end
   end
