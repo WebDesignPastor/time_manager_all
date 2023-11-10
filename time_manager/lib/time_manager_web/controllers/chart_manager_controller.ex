@@ -2,9 +2,6 @@ defmodule TimeManagerWeb.ChartManagerController do
   use TimeManagerWeb, :controller
 
   alias TimeManager.ChartManager
-  alias TimeManager.Users.User
-
-  action_fallback TimeManagerWeb.FallbackController
 
   plug :can_show when action in [:show]
 
@@ -14,7 +11,7 @@ defmodule TimeManagerWeb.ChartManagerController do
     current_user = conn.assigns[:current_user]
 
     case {conn.params["userID"]} do
-      {requested_user_id} when current_user.role == "general_manager" or current_user.role == "manager" -> conn
+      {_requested_user_id} when current_user.role == "general_manager" or current_user.role == "manager" -> conn
       _ -> render(conn, :error, message: "Not authorized based on role")
     end
   end

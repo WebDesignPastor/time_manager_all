@@ -33,10 +33,9 @@ defmodule TimeManagerWeb.AuthController do
             # verify token
             #{:ok, _claims} = JWTToken.verify_and_validate(token, signer)
 
-            render(conn, :auth, user: user, token: token)
+            conn |> put_status(:ok) |> render(:auth, user: user, token: token)
           false ->
             conn |> put_status(:unauthorized) |> render(:error, message: "Incorrect password")
-            render(conn, :error, message: "Incorrect password")
         end
       _ -> conn |> put_status(:not_found) |> render(:error, message: "User not found")
     end
