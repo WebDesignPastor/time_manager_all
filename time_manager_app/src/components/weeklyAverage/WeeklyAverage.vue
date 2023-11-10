@@ -38,7 +38,7 @@ export default {
             isDataLoaded: false
         }
     },
-    mounted() {
+    mounted: () => {
         this.init()
     },
     methods: {
@@ -124,6 +124,7 @@ export default {
             if (res.status === 200) {
                 let val = formatDataWeeklyAverage(dataExample.teams, days.startDate, days.endDate)
                 console.log(val.averageClocks)
+                console.log(JSON.stringify(val, null, 2));
                 this.teams = val.teams
                 this.chartData = val.chartData
                 this.avegareClockHours = val.averageClocks
