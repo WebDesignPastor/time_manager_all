@@ -8,9 +8,10 @@ defmodule TimeManagerWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :csrf do
-    plug :protect_from_forgery
-  end
+  ## for csrf token
+  #pipeline :csrf do
+  #  plug :protect_from_forgery
+  #end
 
   pipeline :auth do
     plug TimeManagerWeb.JWTAuthPlug
