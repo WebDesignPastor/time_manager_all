@@ -31,6 +31,12 @@ echo ----------------------------------
 mix ecto.migrate
 
 echo ----------------------------------
+echo "Seeding the database..."
+echo ----------------------------------
+
+mix run priv/repo/seeds.exs
+
+echo ----------------------------------
 echo "Installing Phoenix dependencies..."
 echo ----------------------------------
 

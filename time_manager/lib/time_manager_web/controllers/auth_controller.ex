@@ -9,7 +9,7 @@ defmodule TimeManagerWeb.AuthController do
 
   def login(conn, %{"email" => email, "password" => password}) do
     case Users.get_by_email(email) do
-      {:ok, %User{} = user} -> 
+      {:ok, %User{} = user} ->
         case Bcrypt.verify_pass(password, user.password) do
           true ->
             csrf_token = get_session(conn, :csrf_token)
@@ -33,14 +33,14 @@ defmodule TimeManagerWeb.AuthController do
             #{:ok, _claims} = JWTToken.verify_and_validate(token, signer)
 
             render(conn, :auth, user: user, token: token)
-          false -> 
+          false ->
             render(conn, :error, message: "Incorrect password")
         end
-      _ -> render(conn, :error, message: "User not found") 
+      _ -> render(conn, :error, message: "User not found")
     end
   end
 
   def logout(conn, _params) do
     render(conn, :error, message: "sign_out not working")
   end
-end 
+end

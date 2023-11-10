@@ -22,8 +22,8 @@ defmodule TimeManagerWeb.Router do
     # pipe_through [:api, :csrf]
 
     resources "/users", UserController, param: "userID", except: [:edit]
-    post "/users/logout", AuthController, :logout 
-  
+    post "/users/logout", AuthController, :logout
+
     resources "/workingtimes/:userID", WorkingTimeController, only: [:index, :create, :show]
     resources "/workingtimes", WorkingTimeController, only: [:delete, :update]
 
@@ -34,9 +34,9 @@ defmodule TimeManagerWeb.Router do
 
   scope "/api", TimeManagerWeb do
     pipe_through :api
-    
-    post "/users/:userID", UserController, :new
+
     post "/users/login", AuthController, :login, as: :login
+    post "/users/:userID", UserController, :create
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
