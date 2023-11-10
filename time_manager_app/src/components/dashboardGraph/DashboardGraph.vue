@@ -8,7 +8,9 @@ export default {
 </script>
 
 <template>
-    <span>i</span>
+    <div class="h-60">
+        <span></span>
+    </div>
 </template>
 
 <style>

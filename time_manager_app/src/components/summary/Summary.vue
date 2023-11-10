@@ -8,7 +8,6 @@ export default {
 </script>
 
 <template>
-    <div class="w-4/12 h-56 px-6 py-4 bg-summarybg rounded-3xl shadow flex flex-col justify-between">
         <h2 class="m-0 text-2xl font-bold tracking-tight text-second-text">Summary</h2>
         <!-- <h2 class="m-0 text-2xl font-bold tracking-tight text-second-text">Clock</h2>
         <div class="flex justify-center items-center flex-col">
@@ -18,7 +17,6 @@ export default {
         <div class="flex justify-center items-center">
             <button class="py-2.5 px-6 rounded-lg text-sm font-medium bg-second-text">Start</button>
         </div> -->
-    </div>
 </template>
 
 <style>

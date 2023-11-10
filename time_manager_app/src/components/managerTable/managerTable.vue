@@ -37,10 +37,10 @@ export default {
 </script>
 
 <template>
-  <div class="w-full h-62 p-5 bg-summarybg rounded-3xl shadow flex flex-col">
+  <div class="w-full h-62 p-5 bg-summarybg rounded-3xl shadow flex flex-col" tabindex="0" aria-label="Team management array">
     <div class="flex">
       <span class="text-second-text">Search user: </span>
-      <input type="text" v-model="searchValue" class="bg-summarybg border border-second-text text-second-text text-sm rounded-lg block w-52 h-7 ml-4 p-2.5">
+      <input type="text" v-model="searchValue" class="bg-summarybg border border-second-text text-second-text text-sm rounded-lg block w-52 h-7 ml-4 p-2.5" aria-label="search a user, input">
     </div>
     <dataTable
       :headers="headers"
