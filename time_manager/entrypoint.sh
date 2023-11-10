@@ -2,6 +2,8 @@
 
 cd /app
 
+MIX_ENV=prod
+
 mix ecto.setup
 
 echo ----------------------------------
