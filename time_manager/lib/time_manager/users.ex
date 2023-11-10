@@ -88,17 +88,17 @@ defmodule TimeManager.Users do
   defp filter_workingtimes(user) do
     case user do
       nil -> {}
-      user -> 
+      user ->
         { start_of_week, end_of_week } = find_current_week()
 
         user_with_weekly_time =
           %User{
             user |
-            workingtimes: 
+            workingtimes:
               case user.workingtimes do
                 [] -> []
-                workingtimes -> 
-                  Enum.filter(workingtimes, fn workingtime -> 
+                workingtimes ->
+                  Enum.filter(workingtimes, fn workingtime ->
                     Date.compare(workingtime.start, start_of_week) != :lt and
                     Date.compare(workingtime.end, end_of_week) != :gt
                   end)
@@ -187,4 +187,9 @@ defmodule TimeManager.Users do
     Repo.get_by(User, username: username, email: email)
   end
 
+  def create_user_seed!(attr) do
+    %User{}
+    |> User.changeset(attr)
+    |> Repo.insert()
+  end
 end
