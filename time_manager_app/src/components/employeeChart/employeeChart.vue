@@ -1,18 +1,19 @@
 <script>
 
+import Clock from '../clock/Clock.vue';
+import Summary from '../summary/Summary.vue';
+import Random from '../random/Random.vue'
 import Workingtime from '../workingtime/Workingtime.vue';
-import { customToolTip } from '../../utils/chart'
-import { ApiGet } from '../../utils/api';
+import DashboardGraph from '../dashboardGraph/DashboardGraph.vue';
+import { customToolTip, workingTimeDataFormat } from '../../utils/chart'
+import { ApiGet, ApiPost } from '../../utils/api';
+import { getWeek, getWeekFromDate } from '../../utils/date'
 
 export default {
     name: 'EmployeeChart',
-    components: {
-        Workingtime
-    },
+    components: { Clock, Summary, Random, Workingtime, DashboardGraph },
     mounted() {
-        this.getAllUsers().then(() => {
-            this.usersList = this.$store.state.usersList
-        })
+        this.getAllUsers()
     },
     data() {
         return {
@@ -34,21 +35,41 @@ export default {
             isError: false,
             errorMessage: '',
             usersList: null,
-            userIdView: null
+            userIdView: null,
+            isUserDashboard: false,
+            bgColor2: '#BFB293'
         }
     },
     methods: {
         async getAllUsers() {
-            this.$store.state.usersList = await ApiGet('/users')
+            let res = await ApiGet('/users', this.$store.state.token)
+            this.$store.dispatch('changeUserList', res).then(() => {
+                this.usersList = this.$store.state.usersList
+            })
         },
         async employeeView(e) {
-            this.userIdView = e.target.value
-            let formatedDate = getWeekFromDate(new Date())
-            let newUrl = formatedDate['url']
-            let res = await ApiGet(`/workingtimes/${this.userIdView}?${newUrl}`)
-            let toDisplay = workingTimeDataFormat(res, formatedDate['days'])
-            this.chartData = toDisplay
-            this.isInitialized = true
+            if(e.target.value !== '') {
+                this.isInitialized = false
+                this.userIdView = e.target.value
+                let formatedDate = getWeekFromDate(new Date())
+                let newUrl = formatedDate['url']
+                let res = await ApiGet(`/workingtimes/${this.userIdView}?${newUrl}`, this.$store.state.token)
+                let toDisplay = workingTimeDataFormat(res, formatedDate['days'])
+                this.chartData = toDisplay
+                this.$store.dispatch('changeFocus', this.userIdView)
+                if(this.isUserDashboard) {
+                    this.$store.dispatch('changeFocusDashboard').then(() => {
+                            this.isUserDashboard = false
+                    })
+                }
+                this.isLoaded = true
+                this.isInitialized = true
+            } else {
+                if(this.isUserDashboard) {
+                    this.isUserDashboard = !this.isUserDashboard
+                }
+                this.isInitialized = false
+            }
         },
         modalOpener() {
             this.modalOpen = !this.modalOpen
@@ -56,19 +77,31 @@ export default {
         errorHandler() {
             this.isError = !this.isError
         },
-        handleCreateWorkingtime() {
+        async handleCreateWorkingtime() {
             if(this.modalDatepicker !== null) {
                 if(this.modalEndHour !== null && this.modalStartHour !== null) {
                     if(this.modalEndHour > this.modalStartHour) {
-                        let start = `${this.modalDatepicker}T${this.modalStartHour}:00:00`
-                        let end = `${this.modalDatepicker}T${this.modalEndHour}:00:00`
+                        let start = ''
+                        let end = ''
+                        if (this.modalStartHour < 10) {
+                            start = `${this.modalDatepicker}T0${this.modalStartHour}:00:00`
+                        } else {
+                            start = `${this.modalDatepicker}T${this.modalStartHour}:00:00`
+                        }
+                        if (this.modalEndHour < 10) {
+                            end = `${this.modalDatepicker}T0${this.modalEndHour}:00:00`
+                        } else {
+                            end = `${this.modalDatepicker}T${this.modalEndHour}:00:00`
+                        }
                         let body = {
                             start: start,
                             end: end,
-                            userId: this.$store.state.currUser.id
                         }
-                        console.log(body)
-                        // envoyer le code ici puis fermer la modal
+                        let newWeek = getWeek(new Date(start))
+                        let userId = this.$store.state.userFocus.id
+                        let res = await ApiPost(`/workingtimes/${userId}`, body, this.$store.state.token)
+                        this.$store.dispatch('changeWeek', newWeek)
+                        this.modalOpen = false
                     } else if (this.modalEndHour < this.modalStartHour) {
                         // display error msg
                         this.errorMessage = 'End hour must be after the start one.'
@@ -78,6 +111,20 @@ export default {
             } else {
                 this.errorMessage = 'You must select a date'
                 this.isError = true
+            }
+        },
+        async viewEmployeeDashboard() {
+            if(!this.isUserDashboard) {
+                let res = await ApiGet(`/users/${this.$store.state.userFocus.id}`, this.$store.state.token)
+                this.$store.dispatch('changeUserFocus', res).then(() => {
+                    this.$store.dispatch('changeFocusDashboard').then(() => {
+                        this.isUserDashboard = true
+                    })
+                })
+            } else {
+                this.$store.dispatch('changeFocusDashboard').then(() => {
+                    this.isUserDashboard = false
+                })
             }
         }
     }
@@ -89,14 +136,15 @@ export default {
 </script>
 
 <template>
-    <div class="w-full px-6 py-4 bg-summarybg rounded-3xl shadow flex flex-col mt-8 mb-4">
+    <div class="w-full px-6 py-4 bg-summarybg rounded-3xl shadow flex flex-col mt-6 mb-8" tabindex="0" aria-label="List of employee working hours">
         <div class="flex justify-between items-center mb-4">
             <span class="text-second-text ml-2 text-xl font-bold">Employee working hours chart</span>
             <div>
                 <select id="employee" @change="employeeView" class="bg-second-text text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
-                <option :value="null"></option>
+                <option :value="null" aria-label="Selected country"></option>
                 <option v-for="user in usersList" :value="user.id">{{ user.email }}</option>
                 </select>
+                <!-- Gestion l'accessibilité des injections  -->
             </div>
         </div>
         <div class="w-full flex justify-between items-center" v-if="isInitialized">
@@ -108,12 +156,22 @@ export default {
                     <button type="button" @click="modalOpener" class="text-red-700 hover:text-white border border-tertiary text-tertiary focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-2 hover:text-white hover:bg-second-text">Create a new working time</button>
                 </div>
                 <div>
-                    <button type="button" class="text-red-700 hover:text-white border border-tertiary text-tertiary focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-2 hover:text-white hover:bg-second-text">View employee dashboard</button>
+                    <button type="button" @click="viewEmployeeDashboard" class="text-red-700 hover:text-white border border-tertiary text-tertiary focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-2 hover:text-white hover:bg-second-text">{{ isUserDashboard ? 'Close employee dashboard' : 'View full employee dashboard' }}</button>
                 </div>
             </div>
         </div>
         <div class="w-full flex justify-center text-second-text text-xl mt-12 mb-12" v-else>
             <span>Select an employee</span>
+        </div>
+        <div v-if="isUserDashboard" class="w-full py-4 bg-summarybg flex flex-col gap-6 mt-4">
+            <div class="flex gap-6">
+                <div class="w-6/12 h-56 px-6 py-4 bg-graph-bg rounded-3xl shadow flex flex-col justify-between" tabindex="0" aria-label="Random Fact">
+                    <Random />
+                </div>
+                <div class="w-full md:w-6/12 h-5- p-3 bg-graph-bg-2 rounded-3xl shadow flex flex-col mb-6 md:mb-0 justify-between" tabindex="0" aria-label="Clock timer">
+                    <Clock />
+                </div>
+            </div>
         </div>
         <div v-if="modalOpen" class="fixed w-full h-full z-50 bg-second-text bg-opacity-50 top-0 left-0 flex justify-center items-center">
             <div class="w-full bg-secondary rounded-3xl sm:max-w-md xl:p-0">
@@ -162,7 +220,7 @@ export default {
                             </div>
                         </form>
                     </div>
-                </div>
+            </div>
         </div>
     </div>
 </template>
