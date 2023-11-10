@@ -54,6 +54,7 @@ defmodule TimeManagerWeb.UserController do
   # error messages already set with constraint error / may need to edit it's formating
   def create(conn, %{"username" => username, "email" => email, "password" => password}) do
     with {:ok, %User{} = user} <- Users.create_user(username, email, password) do
+      IO.puts('test')
       conn
       |> put_status(:created)
       |> put_resp_header("location", ~p"/api/users/#{user}")
@@ -62,10 +63,10 @@ defmodule TimeManagerWeb.UserController do
   end
 
   def show(conn, %{"userID" => id}) do
-      case Users.get_by_id(id) do 
-        { :ok, %User{} = user } -> render(conn, :references_show, user: user)
-         _ -> render(conn, :error, message: "User not found")
-      end
+    case Users.get_by_id(id) do
+      { :ok, %User{} = user } -> render(conn, :references_show, user: user)
+      _ -> render(conn, :error, message: "User not found")
+    end
   end
 
   #def show(conn, %{"username" => username, "email" => email}) do
@@ -78,17 +79,18 @@ defmodule TimeManagerWeb.UserController do
     current_user_role = conn.assigns.current_user.role 
     user_params = user_params
 
-    user_params =
-    case user_params["role"] do
-      #demotion
-      "employee" when user.role == "manager" -> 
-        user_params = Map.put(user_params, "managed_teams", nil)
-      #promotion
-      "manager" when user.role == "employee" ->
-        user_params = Map.put(user_params, "manager_id", nil)
-        user_params = Map.put(user_params, "teams_id", nil)
-      _ -> user_params
-    end
+    #user_params =
+    #case user_params["role"] do
+    #  #demotion
+    #  "employee" when user.role == "manager" -> 
+    #    user_params = Map.put(user_params, "managed_teams", nil)
+    #    user_params = Map.put(user_params, "teams_id", 0)
+    #  #promotion
+    #  "manager" when user.role == "employee" ->
+    #    user_params = Map.put(user_params, "manager_id", nil)
+    #    user_params = Map.put(user_params, "teams_id", 0)
+    #  _ -> user_params
+    #end
 
     #problem because the manager_id is not set by the back here a manager can be set for a user with a different teams  
     allowed_fields =
