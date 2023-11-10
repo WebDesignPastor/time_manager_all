@@ -94,7 +94,7 @@ defmodule TimeManagerWeb.UserController do
     allowed_fields =
       case current_user_role do
         "manager" ->
-          ["email", "username", "password", "teams_id"]
+          ["email", "username", "password", "teams_id", "managed_teams"]
         "general_manager" ->
           ["email", "username", "password", "teams_id", "manager_id", "managed_teams", "role"]
         _ ->
