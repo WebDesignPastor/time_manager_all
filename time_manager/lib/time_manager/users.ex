@@ -45,6 +45,12 @@ defmodule TimeManager.Users do
   def get_user!(id), do: Repo.get!(User, id)
   def get_user(id), do: Repo.get(User, id)
 
+  def get_user(id) do
+    User
+    |> where(id: ^id)
+    |> Repo.one()
+  end
+
   defp last_clock(user_id) do
     Clock
     |> where(user_id: ^user_id)
@@ -88,17 +94,17 @@ defmodule TimeManager.Users do
   defp filter_workingtimes(user) do
     case user do
       nil -> {}
-      user -> 
+      user ->
         { start_of_week, end_of_week } = find_current_week()
 
         user_with_weekly_time =
           %User{
             user |
-            workingtimes: 
+            workingtimes:
               case user.workingtimes do
-                [] -> []
-                workingtimes -> 
-                  Enum.filter(workingtimes, fn workingtime -> 
+                [] -> nil
+                workingtimes ->
+                  Enum.filter(workingtimes, fn workingtime ->
                     Date.compare(workingtime.start, start_of_week) != :lt and
                     Date.compare(workingtime.end, end_of_week) != :gt
                   end)
@@ -108,7 +114,7 @@ defmodule TimeManager.Users do
     end
   end
 
-  defp find_current_week() do
+  def find_current_week() do
     {current_date, _ }  = :calendar.universal_time()
 
     {_, today} = Date.from_erl(current_date)
@@ -133,6 +139,12 @@ defmodule TimeManager.Users do
   def create_user(username, email, password) do
     %User{}
     |> User.changeset(%{username: username, email: email, password: password})
+    |> Repo.insert()
+  end
+
+  def create_user_seed!(attr) do
+    %User{}
+    |> User.changeset(attr)
     |> Repo.insert()
   end
 
@@ -187,4 +199,9 @@ defmodule TimeManager.Users do
     Repo.get_by(User, username: username, email: email)
   end
 
+  def create_user_seed!(attr) do
+    %User{}
+    |> User.changeset(attr)
+    |> Repo.insert()
+  end
 end

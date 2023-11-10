@@ -16,7 +16,16 @@ export default createStore({
             },
             currWeekDisplayed: null,
             usersList: null,
-            isNavOpen: false
+            isNavOpen: false,
+            userFocus: {
+                "id": null,
+                "username": null,
+                "email": null,
+                "role": null,
+                "clock": null,
+                "workingtimes": null
+            },
+            isUserFocusDashboard: false
         }
     },
     mutations: {
@@ -38,7 +47,7 @@ export default createStore({
             state.currWeekDisplayed = payload
         },
         resetState(state) {
-            state.currentContent = 'dashboard'
+            state.currentContent = 'Dashboard'
             state.token = null
             state.isAuth = false
             state.currUser = {
@@ -46,15 +55,42 @@ export default createStore({
                 "username": null,
                 "email": null,
                 "role": null,
-                "clock": null
+                "clock": null,
+                "workingtimes": null
             },
-            state.currWeekDisplayed = null
+            state.currWeekDisplayed = null,
+            state.usersList = null,
+            state.isNavOpen = false,
+            state.userFocus = null
         },
         setClock(state, payload) {
             state.currUser.clock = payload
         },
         setNav(state) {
             state.isNavOpen = !state.isNavOpen
+        },
+        setUserFocusId(state, payload) {
+            state.userFocus.id = payload
+        },
+        setUserFocus(state, payload) {
+            state.userFocus.username = payload.username 
+            state.userFocus.email = payload.email 
+            state.userFocus.role = payload.role 
+            state.userFocus.clock = payload.clock 
+            state.userFocus.workingtimes = payload.workingTimes
+        },
+        setUpdateUser(state, payload) {
+            state.currUser.username = payload.username 
+            state.currUser.email = payload.email
+        },
+        setFocusClock(state, payload) {
+            state.userFocus.clock = payload
+        },
+        setIsUserDashboard (state) {
+            state.isUserFocusDashboard = !state.isUserFocusDashboard
+        },
+        setUserList (state, payload) {
+            state.usersList = payload
         }
     },
     actions: {
@@ -67,14 +103,32 @@ export default createStore({
         changeWeek ({ commit }, payload) {
             commit('setCurrWeek', payload)
         },
-        logout ({ commit }, payload) {
-            commit('resetState', payload)
+        logout ({ commit }) {
+            commit('resetState')
         },
         changeClock ({ commit }, payload) {
             commit('setClock', payload)
         },
         changeNav ({ commit }) {
             commit('setNav')
+        },
+        changeFocus ({ commit }, payload) {
+            commit('setUserFocusId', payload)
+        },
+        changeUpdateUser ({ commit }, payload) {
+            commit('setUpdateUser', payload)
+        },
+        changeUserFocus ({ commit }, payload) {
+            commit('setUserFocus', payload)
+        },
+        changeFocusClock ({ commit }, payload) {
+            commit('setFocusClock', payload)
+        },
+        changeFocusDashboard ({ commit }) {
+            commit('setIsUserDashboard')
+        },
+        changeUserList ({ commit }, payload) {
+            commit('setUserList', payload)
         }
     }
 })

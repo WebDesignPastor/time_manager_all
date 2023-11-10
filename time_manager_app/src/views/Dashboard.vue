@@ -27,7 +27,7 @@ export default {
 <template>
     <div class="wrapper sm:w-11/12 md:w-10/12 lg:w-9/12 xl:w-8/12 2xl:w-7/12">
         <Header />
-        <div class="content flex">
+        <div class="flex">
             <Sidebar />
             <div v-if="isDashboard" class="w-full mt-12">
                 <UserDashboard />
