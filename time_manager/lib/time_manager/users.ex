@@ -27,6 +27,11 @@ defmodule TimeManager.Users do
     |> Repo.all()
   end
 
+  def update_users(manager_id) do
+    query = from(u in User, where: u.manager_id == ^manager_id)
+    Repo.update_all(query, set: [manager_id: nil, teams_id: 0])
+  end
+
   @doc """
   Gets a single user.
 

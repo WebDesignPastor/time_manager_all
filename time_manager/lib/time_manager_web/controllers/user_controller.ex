@@ -111,8 +111,18 @@ defmodule TimeManagerWeb.UserController do
   def delete(conn, %{"userID" => id}) do
     user = Users.get_user!(id)
 
-    with {:ok, %User{}} <- Users.delete_user(user) do
-      send_resp(conn, :no_content, "")
+    if user.role == "manager" do
+      case Users.delete_user(user) do
+        {:ok, %User{}} -> 
+          Users.update_users(user.id)
+          send_resp(conn, :no_content, "")
+        _ -> conn |> put_status(:internal_server_error) |> render(:error, message: "couln't delete user")
+      end
+    else
+      with {:ok, %User{}} <- Users.delete_user(user) do
+        send_resp(conn, :no_content, "")
+      end
     end
+
   end
 end
