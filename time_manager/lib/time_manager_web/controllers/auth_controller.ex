@@ -4,6 +4,7 @@ defmodule TimeManagerWeb.AuthController do
   alias TimeManager.Users
   alias TimeManager.Users.User
   alias TimeManagerWeb.JWTToken
+  alias TimeManager.TokenBlacklist
 
   action_fallback TimeManagerWeb.FallbackController
 
@@ -12,19 +13,19 @@ defmodule TimeManagerWeb.AuthController do
       {:ok, %User{} = user} -> 
         case Bcrypt.verify_pass(password, user.password) do
           true ->
-            csrf_token = get_session(conn, :csrf_token)
-            if csrf_token do
-              IO.inspect("csrf found")
-            else
-              IO.inspect("csrf not found creating it")
-              csrf_token = Plug.CSRFProtection.get_csrf_token()
-              conn = put_session(conn, :csrf_token, csrf_token)
-            end
+            #csrf_token = get_session(conn, :csrf_token)
+            #if csrf_token do
+            #  IO.inspect("csrf found")
+            #else
+            #  IO.inspect("csrf not found creating it")
+            #  csrf_token = Plug.CSRFProtection.get_csrf_token()
+            #  conn = put_session(conn, :csrf_token, csrf_token)
+            #end
 
             signer = Joken.Signer.create("HS256", "NmM2Hu2tANjmiA2PeEugci8VbyXsvO6ObEFryrkbpoBycc6N9IJT7NHdo16bBGx3")
             extra_claims = %{
               "user_id" => user.id,
-              "csrf_token" => csrf_token,
+              #"csrf_token" => csrf_token,
               "exp" => System.system_time(:second) + 30 * 24 * 60 * 60
             }
             # generate token
@@ -34,13 +35,19 @@ defmodule TimeManagerWeb.AuthController do
 
             render(conn, :auth, user: user, token: token)
           false -> 
+            conn |> put_status(:unauthorized) |> render(:error, message: "Incorrect password")
             render(conn, :error, message: "Incorrect password")
         end
-      _ -> render(conn, :error, message: "User not found") 
+      _ -> conn |> put_status(:not_found) |> render(:error, message: "User not found")
     end
   end
 
   def logout(conn, _params) do
-    render(conn, :error, message: "sign_out not working")
+    bearer = Plug.Conn.get_req_header(conn,  "authorization") |> List.first()
+    if bearer != nil do
+      token = bearer |> String.split(" ") |> List.last()
+      TokenBlacklist.add_to_blacklist(token)
+      conn |> put_status(200) |> send_resp(:ok, "signed out")
+    end
   end
 end 
