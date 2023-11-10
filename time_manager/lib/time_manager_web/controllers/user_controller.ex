@@ -93,8 +93,10 @@ defmodule TimeManagerWeb.UserController do
     #problem because the manager_id is not set by the back here a manager can be set for a user with a different teams  
     allowed_fields =
       case current_user_role do
-        "manager" ->
+        "manager" when conn.assigns.current_user.id == user.id ->
           ["email", "username", "password", "teams_id", "managed_teams"]
+        "manager" ->
+          ["email", "username", "password", "teams_id"]
         "general_manager" ->
           ["email", "username", "password", "teams_id", "manager_id", "managed_teams", "role"]
         _ ->
