@@ -35,7 +35,7 @@ if config_env() == :prod do
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "20"),
     socket_options: maybe_ipv6,
-    database: database_url
+    database: System.get_env("PGDATABASE")
 
 
   # The secret key base is used to sign/encrypt cookies and other secrets.
