@@ -24,13 +24,10 @@ case Repo.insert(changeset) do
 end
 
 names = Enum.uniq(Enum.shuffle([
-  "alice", "bob", "charlie", "david", "eva", "frank", "grace", "harry", "ivy", "jack",
-  "kate", "liam", "mia", "noah", "olivia", "parker", "quinn", "ryan", "sophia", "tyler",
-  "uma", "victor", "willow", "xavier", "yara", "zane",
-  "ava", "ben", "catherine", "daniel"
+  "ahri", "akali", "alistar", "amumu", "anivia", "annie", "aphelios", "ashe", "aurelion sol", "azir",
+  "bard", "blitzcrank", "brand", "braum", "caitlyn", "camille", "cassiopeia", "cho'gath", "corki", "darius",
+  "diana", "dr. mundo", "draven", "ekko", "elise", "evelynn", "ezreal", "fiddlesticks", "fiora", "fizz"
 ]))
-
-IO.puts(names)
 
 for n <- 1..30 do
   name = Enum.at(names, rem(n, length(names) - 1) + 1)
