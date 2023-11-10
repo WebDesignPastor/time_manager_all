@@ -97,4 +97,11 @@ defmodule TimeManager.WorkingTimes do
   def delete_working_time(%WorkingTime{} = working_time) do
     Repo.delete(working_time)
   end
+
+
+  def create_working_times_seed!(attr) do
+    %WorkingTime{}
+    |> WorkingTime.changeset(attr)
+    |> Repo.insert()
+  end
 end
