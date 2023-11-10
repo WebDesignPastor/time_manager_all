@@ -59,7 +59,9 @@ jobs:
         POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
         PGPORT: 5432
     - name: Setup DB
-      run: cd time_manager && mix ecto.create && mix ecto.migrate
+      run: |
+        export MIX_ENV=prod
+        cd time_manager && mix ecto.create && mix ecto.migrate
       env:
         PGHOST: localhost
         POSTGRES_USER: ${{ secrets.PG_USER }}
