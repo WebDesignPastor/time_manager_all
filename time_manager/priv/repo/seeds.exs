@@ -2,27 +2,45 @@ alias TimeManager.Repo
 alias TimeManager.Users
 alias TimeManager.Users.User
 
-# Delete all users
 Repo.delete_all(User)
 
-# Define a list of names
+user_params = %{
+  "username" => "gabin",
+  "email" => "gabin@test.com",
+  "password" => "gabin",
+  "role" => "general_manager"
+}
+
+# Assuming you have a User.changeset function to handle the creation logic
+# This function should handle password hashing and any other validation logic
+changeset = User.changeset(%User{}, user_params)
+
+case Repo.insert(changeset) do
+  {:ok, _user} ->
+    IO.puts "User created successfully!"
+  {:error, changeset} ->
+    # If there was an error, it will be shown here
+    IO.inspect changeset.errors
+end
+
 names = Enum.uniq(Enum.shuffle([
-  "Alice", "Bob", "Charlie", "David", "Eva", "Frank", "Grace", "Harry", "Ivy", "Jack",
-  "Kate", "Liam", "Mia", "Noah", "Olivia", "Parker", "Quinn", "Ryan", "Sophia", "Tyler",
-  "Uma", "Victor", "Willow", "Xavier", "Yara", "Zane",
-  "Ava", "Ben", "Catherine", "Daniel"
+  "alice", "bob", "charlie", "david", "eva", "frank", "grace", "harry", "ivy", "jack",
+  "kate", "liam", "mia", "noah", "olivia", "parker", "quinn", "ryan", "sophia", "tyler",
+  "uma", "victor", "willow", "xavier", "yara", "zane",
+  "ava", "ben", "catherine", "daniel"
 ]))
 
-# Loop to create users
+IO.puts(names)
+
 for n <- 1..30 do
-  # Use a safe way to get a name from the list
   name = Enum.at(names, rem(n, length(names) - 1) + 1)
 
   username = name
   email = name <> "@test.com"
+  password = name
   role =
     if rem(n, 10) == 3 do
-      "general_manager"
+      "manager"
     else
       "employee"
     end
@@ -34,5 +52,5 @@ for n <- 1..30 do
       nil
     end
 
-  Users.create_user_seed!(%{username: username, email: email, role: role, manager_id: manager_id})
+  Users.create_user_seed!(%{username: username, password: password, email: email, role: role, manager_id: manager_id})
 end
