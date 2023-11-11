@@ -14,7 +14,6 @@ export default {
     },
     data() {
         return {
-            teamsDisplayed: '1',
             teamsToDisplay: [1],
             teamsAlreadyDisplayed: [1],
             dateRangeStart: '',
@@ -38,10 +37,26 @@ export default {
             isDataLoaded: false
         }
     },
-    mounted: () => {
+    mounted() {
         this.init()
     },
     methods: {
+        async init() {
+            this.isDataLoaded = false
+            let days = getDatesRange(new Date())
+            let body = {
+                start: `${days.startDate}T00:00:01`,
+                end: `${days.endDate}T23:59:59`
+            }
+            let res = await ApiPost('/chartmanager', body, this.$store.state.token)
+            if (res.status === 200) {
+                let val = formatDataWeeklyAverage(dataExample.teams, days.startDate, days.endDate)
+                this.teams = val.teams
+                this.chartData = val.chartData
+                this.averageClocksHours = val.averageClocks
+                this.isDataLoaded = true
+            }
+        },
         handleCheckbox(e) {
             if(!this.teamsAlreadyDisplayed.includes(parseInt(e.target.value))) {
                 let newKey = this.chartData[0].length
@@ -113,27 +128,8 @@ export default {
                 this.chartOptions['series'] = ''
                 this.chartType = 'ColumnChart'
             }
-        },
-        async init() {
-            let days = getDatesRange(new Date())
-            let body = {
-                start: `${days.startDate}T00:00:01`,
-                end: `${days.endDate}T23:59:59`
-            }
-            let res = await ApiPost('/chartmanager', body, this.$store.state.token)
-            if (res.status === 200) {
-                let val = formatDataWeeklyAverage(dataExample.teams, days.startDate, days.endDate)
-                console.log(val.averageClocks)
-                console.log(JSON.stringify(val, null, 2));
-                this.teams = val.teams
-                this.chartData = val.chartData
-                this.avegareClockHours = val.averageClocks
-                console.log(this.averageClocksHours)
-                console.log(this.teams)
-                console.log(this.chartData)
-                this.isDataLoaded = true
-            }
         }
+        
     }
 }
 
