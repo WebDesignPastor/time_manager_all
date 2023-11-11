@@ -37,7 +37,7 @@ for n <- 1..30 do
       "employee"
     end
 
-  Users.create_user_seed!(%{username: username, password: password, email: email, role: role, manager_id: manager_id})
+  Users.create_user_seed!(%{username: username, password: password, email: email, role: role})
 end
 
 # Retrieve all user IDs after insertion
