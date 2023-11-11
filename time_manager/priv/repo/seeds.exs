@@ -37,13 +37,6 @@ for n <- 1..30 do
       "employee"
     end
 
-  manager_id =
-    if role == "employee" do
-      0
-    else
-      nil
-    end
-
   Users.create_user_seed!(%{username: username, password: password, email: email, role: role, manager_id: manager_id})
 end
 
