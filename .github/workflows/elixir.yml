@@ -53,18 +53,22 @@ jobs:
         export MIX_ENV=prod
         cd time_manager && mix deps.get
       env:
-        PGHOST: localhost
-        POSTGRES_USER: ${{ secrets.PG_USER }}
-        POSTGRES_DB: ${{ secrets.PG_DATABASE }}
-        POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
-        PGPORT: 5432
+        MIX_ENV: prod
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+        POOL_SIZE: ${{ secrets.POOL_SIZE }}
+        PHX_HOST: ${{ secrets.PHX_HOST }}
+        PHX_SERVER: ${{ secrets.PHX_SERVER }}
+        ECTO_IPV6: ${{ secrets.ECTO_IPV6 }}
     - name: Setup DB
       run: |
         export MIX_ENV=prod
-        cd time_manager && mix ecto.create && mix ecto.migrate
+        cd time_manager && mix ecto.setup
       env:
-        PGHOST: localhost
-        POSTGRES_USER: ${{ secrets.PG_USER }}
-        POSTGRES_DB: ${{ secrets.PG_DATABASE }}
-        POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
-        PGPORT: 5432
+        MIX_ENV: prod
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+        POOL_SIZE: ${{ secrets.POOL_SIZE }}
+        PHX_HOST: ${{ secrets.PHX_HOST }}
+        PHX_SERVER: ${{ secrets.PHX_SERVER }}
+        ECTO_IPV6: ${{ secrets.ECTO_IPV6 }}
