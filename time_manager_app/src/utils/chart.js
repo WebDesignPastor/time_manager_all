@@ -102,17 +102,17 @@ export const formatDataDailyAverage = (data, date) => {
                 // get all workingtime in ragne and return hours val
                 let toCheck = []
                 fullRange.map((day, index) => {
-                    for(let i = 0; i < user.workintimes.length; i++) {
-                        if((user.workintimes[i].start >= startRange && user.workintimes[i].start <= endRange) && (user.workintimes[i].end >= startRange && user.workintimes[i].end <= endRange)) {
-                            if(day.getDay() === new Date(user.workintimes[i].start).getDay()) {
+                    for(let i = 0; i < user.workingTimes.length; i++) {
+                        if((user.workingTimes[i].start >= startRange && user.workingTimes[i].start <= endRange) && (user.workingTimes[i].end >= startRange && user.workingTimes[i].end <= endRange)) {
+                            if(day.getDay() === new Date(user.workingTimes[i].start).getDay()) {
                                 toCheck.push({checked: true, val: i, day: index})
                             }
                         }
                     }
-                    for(let i = 0; i < user.clocks.length; i++) {
-                        if(user.clocks[i].start >= startRange && user.clocks[i].start <= endRange && user.clocks[i].end >= startRange && user.clocks[i].end <= endRange) {
-                            if(day.getDay() === new Date(user.clocks[i].start).getDay()) {
-                                allClocks.push({day: day.getDay(), user: user.id, start: user.clocks[i].start, end: user.clocks[i].end})
+                    for(let i = 0; i < user.clock.length; i++) {
+                        if(user.clock[i].start >= startRange && user.clock[i].start <= endRange && user.clock[i].end >= startRange && user.clock[i].end <= endRange) {
+                            if(day.getDay() === new Date(user.clock[i].start).getDay()) {
+                                allClocks.push({day: day.getDay(), user: user.id, start: user.clock[i].start, end: user.clock[i].end})
                             }
                         }
                     }
@@ -121,8 +121,8 @@ export const formatDataDailyAverage = (data, date) => {
                 for(let i = 0; i < 7; i++) {
                     if(toCheck[i] !== undefined) {
                         if(toCheck[i].day == i) {
-                            let d1 = user.workintimes[toCheck[i].val].start
-                            let d2 = user.workintimes[toCheck[i].val].end
+                            let d1 = user.workingTimes[toCheck[i].val].start
+                            let d2 = user.workingTimes[toCheck[i].val].end
                             userWorkingtimeAverage.push(getHoursDiffFromRange(new Date(d1), new Date(d2)))
                         }
                     }else {
@@ -274,7 +274,6 @@ export const formatDataWeeklyAverage = (data, d1, d2) => {
         ['Weeks', 'Hours worked on average']
     ]
     let weeksNumber = getWeekNumbersInRange(d1, d2)
-    console.log(weeksNumber)
     let newTeams = []
     result.map((formated, index) => {
         if(formated.averageClocks.length > 0) {
