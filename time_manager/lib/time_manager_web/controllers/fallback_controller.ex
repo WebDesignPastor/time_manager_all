@@ -21,4 +21,18 @@ defmodule TimeManagerWeb.FallbackController do
     |> put_view(html: TimeManagerWeb.ErrorHTML, json: TimeManagerWeb.ErrorJSON)
     |> render(:"404")
   end
+
+  def call(conn, {:error, :user_not_found}) do
+    conn
+    |> put_status(:not_found)
+    |> put_view(json: TimeManagerWeb.ErrorJSON)
+    |> render("404.json", message: "User not found")
+  end
+
+  def call(conn, {:error, :workingtime_not_found}) do
+    conn
+    |> put_status(:not_found)
+    |> put_view(json: TimeManagerWeb.ErrorJSON)
+    |> render("404.json", message: "No working times found for user")
+  end
 end

@@ -7,20 +7,29 @@ defmodule TimeManagerWeb.ClockController do
 
   action_fallback TimeManagerWeb.FallbackController
 
-  plug :is_user_requested when action in [:clock]
+  plug :authorize_user_request when action in [:clock]
 
-  defp is_user_requested(conn, _opts) do
-    if conn.status == 401 do render(conn, :error, message: "Not authorized") end
-
-    current_user = conn.assigns[:current_user]
-    case conn.assigns[:current_user] do
-      %User{role: "general_manager"} ->
+  defp authorize_user_request(conn, _opts) do
+    if conn.status == 401 do
+      render(conn, :error, message: "Not authorized")
+    else
+      current_user = conn.assigns[:current_user]
+      authorize_user_request_by_role(conn, current_user)
+    end
+  end
+  
+  defp authorize_user_request_by_role(conn, current_user) do
+    case {conn.params["userID"]} do
+      {requested_user_id} when current_user.role == "general_manager" ->
         conn
-      %User{} = user ->
-        if {conn.params["userID"]} == current_user.id do
-          conn
-        else
-          render(conn, :error, message: "trying to access another user")
+      {requested_user_id} ->
+        case Users.get_user(requested_user_id) do
+          %User{} = requested_user when current_user.id == requested_user.id ->
+            conn
+          %User{} = requested_user when current_user.role == "manager" and requested_user.manager_id == current_user.id ->
+            conn
+          nil -> render(conn, :error, message: "Incorrect userId in request")
+          _ -> render(conn, :error, message: "Not authorized based on role")
         end
     end
   end

@@ -54,6 +54,7 @@ defmodule TimeManagerWeb.UserController do
   # error messages already set with constraint error / may need to edit it's formating
   def create(conn, %{"username" => username, "email" => email, "password" => password}) do
     with {:ok, %User{} = user} <- Users.create_user(username, email, password) do
+      IO.puts('test')
       conn
       |> put_status(:created)
       |> put_resp_header("location", ~p"/api/users/#{user}")
@@ -62,10 +63,10 @@ defmodule TimeManagerWeb.UserController do
   end
 
   def show(conn, %{"userID" => id}) do
-      case Users.get_by_id(id) do 
-        { :ok, %User{} = user } -> render(conn, :references_show, user: user)
-         _ -> render(conn, :error, message: "User not found")
-      end
+    case Users.get_by_id(id) do
+      { :ok, %User{} = user } -> render(conn, :references_show, user: user)
+      _ -> render(conn, :error, message: "User not found")
+    end
   end
 
   #def show(conn, %{"username" => username, "email" => email}) do

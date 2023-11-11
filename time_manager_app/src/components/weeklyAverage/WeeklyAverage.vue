@@ -8,6 +8,35 @@ export default {
     components: {
         GChart
     },
+    data() {
+        return {
+            teamsDisplayed: '1',
+            teamsToDisplay: [1],
+            teamsAlreadyDisplayed: [1],
+            dateRangeStart: '',
+            dateRangeEnd: '',
+            isComboChart: false,
+            teams: [],
+            chartData: [],
+            averageClocksHours: [],
+            chartOptions: {
+                legend: 'none',
+                vAxis: { minValue: 0 },
+                chartArea: { width: '85%', height: '65%' },
+                seriesType: 'bars',
+                series: '',
+                'backgroundColor': {
+                    'fill': 'C4C3AA',
+                    'opacity': 100
+                },
+            },
+            chartType: 'ColumnChart',
+            isDataLoaded: false
+        }
+    },
+    mounted: () => {
+        this.init()
+    },
     methods: {
         handleCheckbox(e) {
             if(!this.teamsAlreadyDisplayed.includes(parseInt(e.target.value))) {
@@ -71,41 +100,26 @@ export default {
                 this.chartOptions['series'] = ''
                 this.chartType = 'ColumnChart'
             }
-        }
-    },
-    data() {
-        return {
-            teamsDisplayed: '1',
-            teamsToDisplay: [1],
-            teamsAlreadyDisplayed: [1],
-            dateRangeStart: '',
-            dateRangeEnd: '',
-            isComboChart: false,
-            teams: [
-                {id: 1, name: 1, value: [4, 6, 7, 8]},
-                {id: 2, name: 2, value: [4, 5, 2, 9]},
-                {id: 3, name: 3, value: [7, 4, 5, 4]},
-                {id: 4, name: 4, value: [3, 2, 3, 2]}
-            ],
-            chartData: [
-                ['Weeks', 'Hours worked on average'],
-                ['1',  2],
-                ['2',  6],
-                ['3',  4],
-                ['4',  12]
-            ],
-            chartOptions: {
-                legend: 'none',
-                vAxis: { minValue: 0 },
-                chartArea: { width: '85%', height: '65%' },
-                seriesType: 'bars',
-                series: '',
-                'backgroundColor': {
-                    'fill': 'C4C3AA',
-                    'opacity': 100
-                },
-            },
-            chartType: 'ColumnChart'
+        },
+        async init() {
+            let days = getDatesRange(new Date())
+            let body = {
+                start: `${days.startDate}T00:00:01`,
+                end: `${days.endDate}T23:59:59`
+            }
+            let res = await ApiPost('/chartmanager', body, this.$store.state.token)
+            if (res.status === 200) {
+                let val = formatDataWeeklyAverage(dataExample.teams, days.startDate, days.endDate)
+                console.log(val.averageClocks)
+                console.log(JSON.stringify(val, null, 2));
+                this.teams = val.teams
+                this.chartData = val.chartData
+                this.avegareClockHours = val.averageClocks
+                console.log(this.averageClocksHours)
+                console.log(this.teams)
+                console.log(this.chartData)
+                this.isDataLoaded = true
+            }
         }
     }
 }
