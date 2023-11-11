@@ -2,6 +2,10 @@
 
 import { toRaw } from 'vue'
 import { GChart } from 'vue-google-charts'
+import { formatDataWeeklyAverage } from '../../utils/chart'
+import { dataExample } from '../../utils/data'
+import { getDatesRange } from '../../utils/date'
+import { ApiPost } from '../../utils/api'
 
 export default {
     name: 'WeeklyAverage',
@@ -10,6 +14,7 @@ export default {
     },
     data() {
         return {
+            teamsDisplayed: '1',
             teamsToDisplay: [1],
             teamsAlreadyDisplayed: [1],
             dateRangeStart: '',
@@ -37,22 +42,6 @@ export default {
         this.init()
     },
     methods: {
-        async init() {
-            this.isDataLoaded = false
-            let days = getDatesRange(new Date())
-            let body = {
-                start: `${days.startDate}T00:00:01`,
-                end: `${days.endDate}T23:59:59`
-            }
-            let res = await ApiPost('/chartmanager', body, this.$store.state.token)
-            if (res.status === 200) {
-                let val = formatDataWeeklyAverage(dataExample.teams, days.startDate, days.endDate)
-                this.teams = val.teams
-                this.chartData = val.chartData
-                this.averageClocksHours = val.averageClocks
-                this.isDataLoaded = true
-            }
-        },
         handleCheckbox(e) {
             if(!this.teamsAlreadyDisplayed.includes(parseInt(e.target.value))) {
                 let newKey = this.chartData[0].length
@@ -83,30 +72,39 @@ export default {
                 }
             }
         },
-        handleDatePicker(e) {
-            // logique du code pour le weekly average
-            // au clique du btn qui envoie les dates pickers
-            // il faut fetch toutes les données relative a la range en utilisant les semaines
-            // puis les trier par team
-            // puis en faire la moyenne
-            // puis renvoyer un tableau de valeur
+        async handleDatePicker(e) {
+            if(this.dateRangeStart !== '' && this.dateRangeEnd !== '' && this.dateRangeStart < this.dateRangeEnd) {
+                this.isDataLoaded = false
+                let body = {
+                    start: `${this.dateRangeStart}T00:00:01`,
+                    end: `${this.dateRangeEnd}T23:59:59`
+                }
+                let res = await ApiPost('/chartmanager', body, this.$store.state.token)
+                if(res.status === 200) {
+                    let val = formatDataWeeklyAverage(res.data.teams, this.dateRangeStart, this.dateRangeEnd)
+                    this.teams = val['teams']
+                    this.chartData = val['chartData']
+                    this.avegareClockHours = val['averageClocks']
+                    this.isDataLoaded = true
+                }
+            }
         },
         handleComboChart(e) {
             this.isComboChart = !this.isComboChart
             if(this.isComboChart) {
                 // il faut qu'au click cela ajoute les datas necessaire pour transformer ca en combochart
-                let avegareClockHours = ['average', 7, 6, 6, 8]
+                let currClocks = this.avegareClockHours
                 let newData = toRaw(this.chartData)
                 let newSeries = {}
                 newSeries[newData[0].length - 1] = {type: 'line'}
                 this.chartOptions['series'] = newSeries
                 this.chartType = 'ComboChart'
                 this.chartData.map((row, index) => {
-                    newData[index][row.length] = avegareClockHours[index]
+                    newData[index][row.length] = currClocks[index]
                 })
                 this.chartData = newData
             } else {
-                let indexToErease = this.chartData[0].indexOf('average')
+                let indexToErease = this.chartData[0].indexOf('Average hours worked')
                 let newData = []
                 this.chartData.map((row) => {
                     newData.push(row.filter((data, idx) => idx !== indexToErease))
@@ -115,8 +113,22 @@ export default {
                 this.chartOptions['series'] = ''
                 this.chartType = 'ColumnChart'
             }
+        },
+        async init() {
+            let days = getDatesRange(new Date())
+            let body = {
+                start: `${days.startDate}T00:00:01`,
+                end: `${days.endDate}T23:59:59`
+            }
+            let res = await ApiPost('/chartmanager', body, this.$store.state.token)
+            if (res.status === 200) {
+                let val = formatDataWeeklyAverage(dataExample.teams, days.startDate, days.endDate)
+                this.teams = val.teams
+                this.chartData = val.chartData
+                this.averageClockHours = val.averageClocks
+                this.isDataLoaded = true
+            }
         }
-        
     }
 }
 
@@ -151,11 +163,12 @@ export default {
             </ul>
         </div>
         <GChart
+            v-if="isDataLoaded"
             :type="chartType"
             :data="chartData"
             :options="chartOptions"
         />
-        <div class="flex items-center mb-2 mr-2">
+        <div class="flex items-center mb-2 mr-2" v-if="averageClocksHours.length > 1">
             <span class="mr-4 text-second-text">Compare with clocks </span>
             <input @click="handleComboChart" v-model="isComboChart" id="'vue-checkbox-list-worked-hours-week" type="checkbox" class="w-4 h-4 text-second-text focus:ring-blue-500">
         </div>
