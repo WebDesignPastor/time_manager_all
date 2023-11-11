@@ -2,7 +2,6 @@
 
 import Header from '../components/header/Header.vue';
 import {ApiPost} from '../utils/api'
-import bcrypt from 'bcrypt.js'
 
 export default {
     name: 'Login',
@@ -51,14 +50,14 @@ export default {
             if(this.email.length > 0 && this.password.length > 0 && this.username.length > 0) {
                 this.isClickable = false
 
-                const saltRounds = 10;
-                const salt = await bcrypt.genSalt(saltRounds)
-                const hashedPassword = await bcrypt.hash(this.password, salt)
+                // const saltRounds = 10;
+                // const salt = await bcrypt.genSalt(saltRounds)
+                // const hashedPassword = await bcrypt.hash(this.password, salt)
 
                 let body = {
                     email: this.email,
                     password: this.password,
-                    username: hashedPassword
+                    username: this.password
                 }
                 let res = await ApiPost('/users', body)
 
