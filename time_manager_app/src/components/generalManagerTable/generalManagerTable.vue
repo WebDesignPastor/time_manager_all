@@ -36,11 +36,9 @@ export default {
       let res = await ApiGet('/users', this.$store.state.token)
       let items = res.filter((user) => user.role !== 'general_manager')
       this.items = items
-      console.log(items)
       if(this.$store.state.currUser.role == 'general_manager' && this.$store.state.currentContent == 'Employes-dashboard') {
         let managerList = this.items.filter((x) => x.role === 'manager')
         this.managerList = managerList
-        console.log(managerList)
       }
     },
     async updateUserSelect(e, user, toUpdate) {

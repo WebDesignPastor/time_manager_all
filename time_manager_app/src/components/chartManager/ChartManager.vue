@@ -12,7 +12,7 @@ export default {
 </script>
 
 <template>
-    <div class="w-full flex justifybetween gap-6">
+    <div class="w-full flex flex-col md:flex-row justifybetween gap-6">
         <DailyAverage />
         <WeeklyAverage />
     </div>

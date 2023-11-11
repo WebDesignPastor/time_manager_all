@@ -136,18 +136,18 @@ export default {
 </script>
 
 <template>
-    <div class="w-6/12 h-62 p-3 bg-graph-bg-2 rounded-3xl shadow flex flex-col" aria-label="Graph with weekly average hours worked by teams" tabindex="0">
-        <div class="flex flex-col mx-2">
-            <span class="m-0 mb-2 text-xl font-bold tracking-tight text-second-text">Weekly average hours worked by teams :</span>
-            <div date-rangepicker class="flex items-center mr-4 justify-between mb-1" tabindex="0" aria-label="Selected range date">
+    <div class="w-full md:w-6/12 min-h-62 p-3 md:p-2 lg:p-3 bg-graph-bg-2 rounded-3xl shadow flex flex-col" aria-label="Graph with weekly average hours worked by teams" tabindex="0">
+        <span class="m-0 mb-2 text-xl font-bold tracking-tight text-second-text mx-2">Weekly average hours worked by teams :</span>
+        <div class="flex flex-col sm:mx-2 md:mx-0 lg:mx-2">
+            <div date-rangepicker class="flex items-center sm:mr-4 md:mr-0 lg:mr-4 justify-between mb-1" tabindex="0" aria-label="Selected range date">
                 <div class="relative">
-                    <input v-model="dateRangeStart" name="start" type="date" class="bg-second-text text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-1.5" placeholder="Select date start" aria-label="Select starting date">
+                    <input v-model="dateRangeStart" name="start" type="date" class="bg-second-text text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full md:pl-0 lg:pl-4 pl-4 p-1.5" placeholder="Select date start" aria-label="Select starting date">
                 </div>
-                <span class="mx-4 text-second-text">to</span>
+                <span class="mx-4 text-second-text hidden sm:block md:hidden lg:block">to</span>
                 <div class="relative">
                     <input v-model="dateRangeEnd" name="end" type="date" class="bg-second-text text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-1.5" placeholder="Select date end" aria-label="Select end date">
                 </div>
-                <button @click="handleDatePicker" type="button" class="ml-2 text-white bg-second-text focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2.5 text-center inline-flex items-center" aria-label="Validate">
+                <button @click="handleDatePicker" type="button" class="sm:ml-2 text-white bg-second-text focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2.5 text-center inline-flex items-center" aria-label="Validate">
                     <svg class="w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
                     </svg>
@@ -168,7 +168,7 @@ export default {
             :data="chartData"
             :options="chartOptions"
         />
-        <div class="flex items-center mb-2 mr-2" v-if="averageClocksHours.length > 1">
+        <div class="flex items-center mb-2 sm:mr-2" v-if="averageClocksHours.length > 1">
             <span class="mr-4 text-second-text">Compare with clocks </span>
             <input @click="handleComboChart" v-model="isComboChart" id="'vue-checkbox-list-worked-hours-week" type="checkbox" class="w-4 h-4 text-second-text focus:ring-blue-500">
         </div>

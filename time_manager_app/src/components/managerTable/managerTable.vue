@@ -74,8 +74,8 @@ export default {
   <div class="w-full h-62 p-5 bg-summarybg rounded-3xl shadow flex flex-col" tabindex="0" aria-label="Team management array">
     <div class="flex justify-between">
       <div class="flex">
-        <span class="text-second-text">Search user: </span>
-        <input type="text" v-model="searchValue" class="bg-summarybg border border-second-text text-second-text text-sm rounded-lg block w-52 h-7 ml-4 p-2.5" aria-label="search a user, input">
+        <span class="text-second-text hidden sm:block">Search user: </span>
+        <input type="text" v-model="searchValue" class="bg-summarybg border border-second-text text-second-text text-sm rounded-lg block w-32 sm:w-52 h-7 sm:ml-4 p-2.5" aria-label="search a user, input">
       </div>
       <div class="flex text-second-text items-center" @click="createNewTeam" v-if="this.$store.state.currUser.role === 'manager'">
         <span class="mr-2">Create a team</span>

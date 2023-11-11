@@ -76,13 +76,18 @@ export default {
                     start: `${days['days'].firstDay}T00:00:01`,
                     end: `${days['days'].lastDay}T23:59:59`
                 }
-                let res = await ApiPost('/chartmanager', body, this.$store.state.token)
-                if(res.status === 200) {
-                    let val = formatDataDailyAverage(res.data.teams, new Date())
-                    this.teams = val['teams']
-                    this.chartData = val['chartData']
-                    this.avegareClockHours = val['averageClocks']
-                }
+                let val = formatDataDailyAverage(dataExample.teams, new Date())
+                console.log(val)
+                this.teams = val['teams']
+                this.chartData = val['chartData']
+                this.avegareClockHours = val['averageClocks']
+                // let res = await ApiPost('/chartmanager', body, this.$store.state.token)
+                // if(res.status === 200) {
+                //     let val = formatDataDailyAverage(res.data.teams, new Date())
+                //     this.teams = val['teams']
+                //     this.chartData = val['chartData']
+                //     this.avegareClockHours = val['averageClocks']
+                // }
             }
         },
         handleComboChart(e) {
@@ -99,7 +104,6 @@ export default {
                     newData[index][row.length] = currClocks[index]
                 })
                 this.chartData = newData
-                console.log(this.chartData)
             } else {
                 let indexToErease = this.chartData[0].indexOf('Average hours worked')
                 let newData = []
@@ -117,14 +121,17 @@ export default {
                 start: `${days['days'].firstDay}T00:00:01`,
                 end: `${days['days'].lastDay}T23:59:59`
             }
-            let res = await ApiPost('/chartmanager', body, this.$store.state.token)
-            if (res.status === 200) {
-                // let val = formatDataDailyAverage(res.data.teams, new Date())
-                let val = formatDataDailyAverage(dataExample.teams, new Date())
-                this.teams = val['teams']
-                this.chartData = val['chartData']
-                this.avegareClockHours = val['averageClocks']
-            }
+            let val = formatDataDailyAverage(dataExample.teams, new Date())
+            this.teams = val['teams']
+            this.chartData = val['chartData']
+            this.avegareClockHours = val['averageClocks']
+            // let res = await ApiPost('/chartmanager', body, this.$store.state.token)
+            // if (res.status === 200) {
+            //     let val = formatDataDailyAverage(res.data.teams, new Date())
+            //     this.teams = val['teams']
+            //     this.chartData = val['chartData']
+            //     this.avegareClockHours = val['averageClocks']
+            // }
         }
     }
 }
@@ -132,16 +139,16 @@ export default {
 </script>
 
 <template>
-    <div class="w-6/12 h-62 p-3 bg-clockbg rounded-3xl shadow flex flex-col" aria-label="Graph with daily average hours worked by teams" tabindex="0">
-        <div class="flex flex-col mx-2">
-            <span class="m-0 mb-2 text-xl font-bold tracking-tight text-second-text">Daily average hours worked by teams :</span>
+    <div class="w-full md:w-6/12 min-h-62 p-3 md:p-2 lg:p-3 bg-clockbg rounded-3xl shadow flex flex-col" aria-label="Graph with daily average hours worked by teams" tabindex="0">
+        <span class="m-0 mb-2 text-xl font-bold tracking-tight text-second-text mx-2">Daily average hours worked by teams :</span>
+        <div class="flex md:flex-col lg:flex-row mx-2">
             <div date-rangepicker class="flex items-center mr-4 justify-end mb-1" tabindex="0" aria-label="Selected range date">
                 <div class="relative">
                     <input @change="handleDatePicker" required v-model="dateRangeStart" name="start" type="date" class="bg-second-text text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-4 p-1.5" placeholder="Select date start" aria-label="Starting date">
                 </div>
             </div>
-            <ul class="items-center w-full text-sm font-medium bg-clockbg sm:flex" tabindex="0" aria-label="Checkbox by team, press space to select">
-                <li class="w-2/12" v-for="(team, index) in teams">
+            <ul class="items-center w-full text-sm font-medium bg-clockbg flex" tabindex="0" aria-label="Checkbox by team, press space to select">
+                <li class="w-3/12 sm:w-2/12" v-for="(team, index) in teams">
                     <div class="flex items-center pl-3">
                         <input @click="handleCheckbox" v-model="teamsToDisplay" :id="'vue-checkbox-list' + team.id" type="checkbox" :value="team.id" class="w-4 h-4 text-second-text focus:ring-blue-500" :disabled="index === 0 && 'disabled'" >
                         <label :for="'vue-checkbox-list' + team.id" class="w-full py-2 ml-2 text-sm font-medium text-second-text">{{  team.name  }}</label>
@@ -154,7 +161,7 @@ export default {
             :data="chartData"
             :options="chartOptions"
         />
-        <div class="flex items-center mb-2 mr-2" v-if="averageClocksHours.length !== 0">
+        <div class="flex items-center mb-2 sm:mr-2" v-if="averageClocksHours.length !== 0">
             <span class="mr-4 text-second-text">Compare with clocks </span>
             <input @click="handleComboChart" v-model="isComboChart" id="'vue-checkbox-list-worked-hours" type="checkbox" class="w-4 h-4 text-second-text focus:ring-blue-500" aria-label="Compare with clock">
         </div>

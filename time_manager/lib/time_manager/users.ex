@@ -27,6 +27,11 @@ defmodule TimeManager.Users do
     |> Repo.all()
   end
 
+  def update_users(manager_id) do
+    query = from(u in User, where: u.manager_id == ^manager_id)
+    Repo.update_all(query, set: [manager_id: nil, teams_id: 0])
+  end
+
   @doc """
   Gets a single user.
 
@@ -45,11 +50,11 @@ defmodule TimeManager.Users do
   def get_user!(id), do: Repo.get!(User, id)
   def get_user(id), do: Repo.get(User, id)
 
-  def get_user(id) do
-    User
-    |> where(id: ^id)
-    |> Repo.one()
-  end
+  #def get_user(id) do
+  #  User
+  #  |> where(id: ^id)
+  #  |> Repo.one()
+  #end
 
   defp last_clock(user_id) do
     Clock
@@ -142,10 +147,9 @@ defmodule TimeManager.Users do
     |> Repo.insert()
   end
 
-  #attrs = %{username: username, email: email, password: password, role: role, teams_id: teams_id}
-  def create_user_seed!(attrs) do
+  def create_user_seed!(attr) do
     %User{}
-    |> User.changeset(attrs)
+    |> User.changeset(attr)
     |> Repo.insert()
   end
 
@@ -200,4 +204,9 @@ defmodule TimeManager.Users do
     Repo.get_by(User, username: username, email: email)
   end
 
+  def create_user_seed!(attr) do
+    %User{}
+    |> User.changeset(attr)
+    |> Repo.insert()
+  end
 end

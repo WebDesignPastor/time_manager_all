@@ -14,17 +14,16 @@ defmodule TimeManager.WorkingTimes do
     case Users.get_user(id) do
       nil ->
         {:error, :user_not_found}
-      user ->
+      _user ->
         working_times =
         WorkingTime
         |> where(user_id: ^id)
         |> Repo.all()
 
         case working_times do
+          nil -> {:error, :workingtime_not_found}
           working_times ->
             {:ok, working_times}
-          _ ->
-            {:error, :workingtime_not_found}
         end
     end
   end
@@ -97,5 +96,12 @@ defmodule TimeManager.WorkingTimes do
   #------ DELETE ---------------------
   def delete_working_time(%WorkingTime{} = working_time) do
     Repo.delete(working_time)
+  end
+
+
+  def create_working_times_seed!(attr) do
+    %WorkingTime{}
+    |> WorkingTime.changeset(attr)
+    |> Repo.insert()
   end
 end

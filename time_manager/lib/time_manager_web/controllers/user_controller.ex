@@ -15,7 +15,7 @@ defmodule TimeManagerWeb.UserController do
     current_user = conn.assigns[:current_user]
 
     case {conn.params["userID"]} do
-      {requested_user_id} when current_user.role == "general_manager" ->
+      {_requested_user_id} when current_user.role == "general_manager" ->
         conn
       {requested_user_id} ->
         case Users.get_user(requested_user_id) do
@@ -32,7 +32,6 @@ defmodule TimeManagerWeb.UserController do
   defp is_general_manager(conn, _opts) do
     if conn.status == 401 do render(conn, :error, message: "Not authorized") end
 
-    current_user = conn.assigns[:current_user]
     case conn.assigns[:current_user] do
       %User{role: "general_manager"} -> conn
       %User{role: "manager"} -> conn
@@ -44,9 +43,9 @@ defmodule TimeManagerWeb.UserController do
     current_user = conn.assigns[:current_user]
     users = 
     if current_user.role != "general_manager" do
-      users = Users.list_users_from_team(current_user.id)
+      Users.list_users_from_team(current_user.id)
     else
-      users = Users.list_users()
+      Users.list_users()
     end
     render(conn, :index, users: users)
   end
@@ -54,7 +53,6 @@ defmodule TimeManagerWeb.UserController do
   # error messages already set with constraint error / may need to edit it's formating
   def create(conn, %{"username" => username, "email" => email, "password" => password}) do
     with {:ok, %User{} = user} <- Users.create_user(username, email, password) do
-      IO.puts('test')
       conn
       |> put_status(:created)
       |> put_resp_header("location", ~p"/api/users/#{user}")
@@ -79,27 +77,28 @@ defmodule TimeManagerWeb.UserController do
     current_user_role = conn.assigns.current_user.role 
     user_params = user_params
 
-    user_params =
-    case user_params["role"] do
-      #demotion
-      "employee" when user.role == "manager" -> 
-        user_params = Map.put(user_params, "managed_teams", nil)
-      #promotion
-      "manager" when user.role == "employee" ->
-        user_params = Map.put(user_params, "manager_id", nil)
-        user_params = Map.put(user_params, "teams_id", nil)
-      _ -> user_params
-    end
+    #user_params =
+    #case user_params["role"] do
+    #  #demotion
+    #  "employee" when user.role == "manager" -> 
+    #    user_params = Map.put(user_params, "managed_teams", nil)
+    #    user_params = Map.put(user_params, "teams_id", 0)
+    #  #promotion
+    #  "manager" when user.role == "employee" ->
+    #    user_params = Map.put(user_params, "manager_id", nil)
+    #    user_params = Map.put(user_params, "teams_id", 0)
+    #  _ -> user_params
+    #end
 
     #problem because the manager_id is not set by the back here a manager can be set for a user with a different teams  
     allowed_fields =
       case current_user_role do
         "manager" ->
-          allowed_fields = ["email", "username", "password", "teams_id"]
+          ["email", "username", "password", "teams_id", "managed_teams"]
         "general_manager" ->
-          allowed_fields = ["email", "username", "password", "teams_id", "manager_id", "managed_teams", "role"]
+          ["email", "username", "password", "teams_id", "manager_id", "managed_teams", "role"]
         _ ->
-          allowed_fields = ["email", "username", "password"]
+          ["email", "username", "password"]
       end
 
     filtered_params = Map.take(user_params, allowed_fields)
@@ -112,8 +111,18 @@ defmodule TimeManagerWeb.UserController do
   def delete(conn, %{"userID" => id}) do
     user = Users.get_user!(id)
 
-    with {:ok, %User{}} <- Users.delete_user(user) do
-      send_resp(conn, :no_content, "")
+    if user.role == "manager" do
+      case Users.delete_user(user) do
+        {:ok, %User{}} -> 
+          Users.update_users(user.id)
+          send_resp(conn, :no_content, "")
+        _ -> conn |> put_status(:internal_server_error) |> render(:error, message: "couln't delete user")
+      end
+    else
+      with {:ok, %User{}} <- Users.delete_user(user) do
+        send_resp(conn, :no_content, "")
+      end
     end
+
   end
 end

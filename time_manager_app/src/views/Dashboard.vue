@@ -29,20 +29,20 @@ export default {
 </script>
 
 <template>
-    <div class="wrapper sm:w-11/12 md:w-10/12 lg:w-9/12 xl:w-8/12 2xl:w-7/12">
+    <div class="wrapper w-full sm:w-11/12 md:w-10/12 lg:w-9/12 xl:w-8/12 2xl:w-7/12">
         <Header />
         <div class="flex">
             <Sidebar />
-            <div v-if="isDashboard" class="w-full mt-12">
+            <div v-if="isDashboard" class="w-full mt-6 sm:mt-12 p-2 sm:p-0">
                 <UserDashboard />
             </div>
-            <div v-if="isTeams" class="w-full mt-12">
+            <div v-if="isTeams" class="w-full mt-6 sm:mt-12 p-2 sm:p-0">
               <ManagerTable/>
             </div>
-            <div v-if="isGraphs" class="w-full mt-12">
+            <div v-if="isGraphs" class="w-full mt-6 sm:mt-12 p-2 sm:p-0">
                 <ChartManager />
             </div>
-            <div v-if="isEmployesDashboard" class="w-full mt-12">
+            <div v-if="isEmployesDashboard" class="w-full mt-6 sm:mt-12 p-2 sm:p-0">
                 <GeneralManagerTable/>
             </div>
         </div>
@@ -50,8 +50,4 @@ export default {
 </template>
 
 <style>
-
-.wrapper {
-    width: 1000px;
-}
 </style>

@@ -23,7 +23,6 @@
       sortBy: String,
       managerList: Array
     },
-
     methods: {
       displayRoles(user) {
         if (user.role === 'employee') {

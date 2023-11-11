@@ -8,7 +8,7 @@ export default {
 </script>
 
 <template>
-        <h2 class="m-0 text-2xl font-bold tracking-tight text-second-text">Summary</h2>
+        <h2 class="m-0 sm:text-lg md:text-2xl text-2xl font-bold tracking-tight text-second-text">Summary</h2>
         <!-- <h2 class="m-0 text-2xl font-bold tracking-tight text-second-text">Clock</h2>
         <div class="flex justify-center items-center flex-col">
             <span class="text-gray text-sm mb-2">Started at :</span>

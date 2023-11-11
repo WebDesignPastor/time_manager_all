@@ -12,9 +12,6 @@ export default {
         isResponsive: window.innerWidth > 1280 ? false : true
     }
   },
-  mounted() {
-    console.log(this.userRole)
-  },
   methods: {
     changeContent(newContent) {
         this.$store.dispatch('changeContent', {newContent: newContent})

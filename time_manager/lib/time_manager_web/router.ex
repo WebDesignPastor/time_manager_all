@@ -8,9 +8,10 @@ defmodule TimeManagerWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :csrf do
-    plug :protect_from_forgery
-  end
+  ## for csrf token
+  #pipeline :csrf do
+  #  plug :protect_from_forgery
+  #end
 
   pipeline :auth do
     plug TimeManagerWeb.JWTAuthPlug
@@ -21,9 +22,8 @@ defmodule TimeManagerWeb.Router do
     # commented to remove csrf protection
     # pipe_through [:api, :csrf]
 
-    resources "/users", UserController, param: "userID", except: [:edit]
-    post "/users/logout", AuthController, :logout 
-  
+    get "/users/logout", AuthController, :logout 
+    resources "/users", UserController, param: "userID", except: [:edit, :create]
     resources "/workingtimes/:userID", WorkingTimeController, only: [:index, :create, :show]
     resources "/workingtimes", WorkingTimeController, only: [:delete, :update]
 

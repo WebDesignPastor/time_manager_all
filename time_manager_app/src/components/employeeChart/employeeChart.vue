@@ -119,16 +119,14 @@ export default {
     }
 }
 
-// il faut ajouter les fonctionnalités permettant de voir le working time d'un employé
-// de créer des workintimes et d'aller voir les dashboard user
 
 </script>
 
 <template>
     <div class="w-full px-6 py-4 bg-summarybg rounded-3xl shadow flex flex-col mt-6 mb-8">
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
             <span class="text-second-text ml-2 text-xl font-bold">Employee working hours chart</span>
-            <div>
+            <div class="mt-2 sm:mt-0">
                 <select id="employee" @change="employeeView" class="bg-second-text text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
                 <option :value="null" aria-label="Selected country"></option>
                 <option v-for="user in usersList" :value="user.id">{{ user.email }}</option>
@@ -136,11 +134,11 @@ export default {
                 <!-- Gestion l'accessibilité des injections  -->
             </div>
         </div>
-        <div class="w-full flex justify-between items-center" v-if="isInitialized">
-            <div class="w-6/12">
+        <div class="w-full flex justify-between items-center flex-col sm:flex" v-if="isInitialized">
+            <div class="w-full sm:w-6/12 mt-4 sm:mt-0">
                 <Workingtime :bg-color="bgColor" :data="chartData" />
             </div>
-            <div class="w-6/12 flex justify-center items-center flex-col">
+            <div class="w-full sm:w-6/12 flex justify-center items-center flex-col mt-4 sm:mt-0">
                 <div>
                     <button type="button" @click="modalOpener" class="text-red-700 hover:text-white border border-tertiary text-tertiary focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-2 hover:text-white hover:bg-second-text">Create a new working time</button>
                 </div>
@@ -153,17 +151,17 @@ export default {
             <span>Select an employee</span>
         </div>
         <div v-if="isUserDashboard" class="w-full py-4 bg-summarybg flex flex-col gap-6 mt-4">
-            <div class="flex gap-6">
-                <div class="w-6/12 h-56 px-6 py-4 bg-graph-bg rounded-3xl shadow flex flex-col justify-between">
+            <div class="flex gap-6 flex-col sm:flex">
+                <div class="w-full sm:w-6/12 h-56 px-6 py-4 bg-graph-bg rounded-3xl shadow flex flex-col justify-between">
                     <Random />
                 </div>
-                <div class="w-full md:w-6/12 h-5- p-3 bg-graph-bg-2 rounded-3xl shadow flex flex-col mb-6 md:mb-0 justify-between">
+                <div class="w-full sm:w-6/12 h-56 p-3 bg-graph-bg-2 rounded-3xl shadow flex flex-col mb-6 md:mb-0 justify-between">
                     <Clock />
                 </div>
             </div>
         </div>
         <div v-if="modalOpen" class="fixed w-full h-full z-50 bg-second-text bg-opacity-50 top-0 left-0 flex justify-center items-center">
-            <div class="w-full bg-secondary rounded-3xl sm:max-w-md xl:p-0">
+            <div class="w-full bg-secondary rounded-3xl sm:max-w-md xl:p-0 m-2 sm:m-0">
                     <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
                         <div class="flex justify-between items-center">
                             <h1 class="text-xl font-bold leading-tight tracking-tight md:text-2xl text-second-text">
