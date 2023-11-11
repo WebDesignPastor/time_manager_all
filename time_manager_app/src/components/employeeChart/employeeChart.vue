@@ -7,13 +7,15 @@ import Workingtime from '../workingtime/Workingtime.vue';
 import DashboardGraph from '../dashboardGraph/DashboardGraph.vue';
 import { customToolTip, workingTimeDataFormat } from '../../utils/chart'
 import { ApiGet, ApiPost } from '../../utils/api';
-import { getWeek, getWeekFromDate } from '../../utils/date'
+import { getWeekFromDate } from '../../utils/date'
 
 export default {
     name: 'EmployeeChart',
     components: { Clock, Summary, Random, Workingtime, DashboardGraph },
     mounted() {
-        this.getAllUsers()
+        this.getAllUsers().then(() => {
+            this.usersList = this.$store.state.usersList
+        })
     },
     data() {
         return {
@@ -37,39 +39,28 @@ export default {
             usersList: null,
             userIdView: null,
             isUserDashboard: false,
-            bgColor2: '#BFB293'
+            bgColor2: '#BFB293',
         }
     },
     methods: {
         async getAllUsers() {
-            let res = await ApiGet('/users', this.$store.state.token)
-            this.$store.dispatch('changeUserList', res).then(() => {
-                this.usersList = this.$store.state.usersList
-            })
+            this.$store.state.usersList = await ApiGet('/users', this.$store.state.token)
         },
         async employeeView(e) {
-            if(e.target.value !== '') {
-                this.isInitialized = false
-                this.userIdView = e.target.value
-                let formatedDate = getWeekFromDate(new Date())
-                let newUrl = formatedDate['url']
-                let res = await ApiGet(`/workingtimes/${this.userIdView}?${newUrl}`, this.$store.state.token)
-                let toDisplay = workingTimeDataFormat(res, formatedDate['days'])
-                this.chartData = toDisplay
-                this.$store.dispatch('changeFocus', this.userIdView)
-                if(this.isUserDashboard) {
-                    this.$store.dispatch('changeFocusDashboard').then(() => {
-                            this.isUserDashboard = false
-                    })
-                }
-                this.isLoaded = true
-                this.isInitialized = true
-            } else {
-                if(this.isUserDashboard) {
-                    this.isUserDashboard = !this.isUserDashboard
-                }
-                this.isInitialized = false
+            this.isInitialized = false
+            this.userIdView = e.target.value
+            let formatedDate = getWeekFromDate(new Date())
+            let newUrl = formatedDate['url']
+            let res = await ApiGet(`/workingtimes/${this.userIdView}?${newUrl}`, this.$store.state.token)
+            let toDisplay = workingTimeDataFormat(res, formatedDate['days'])
+            this.chartData = toDisplay
+            this.$store.dispatch('changeFocus', this.userIdView)
+            if(this.isUserDashboard) {
+                this.$store.dispatch('changeFocusDashboard').then(() => {
+                        this.isUserDashboard = false
+                })
             }
+            this.isInitialized = true
         },
         modalOpener() {
             this.modalOpen = !this.modalOpen
@@ -97,10 +88,8 @@ export default {
                             start: start,
                             end: end,
                         }
-                        let newWeek = getWeek(new Date(start))
                         let userId = this.$store.state.userFocus.id
                         let res = await ApiPost(`/workingtimes/${userId}`, body, this.$store.state.token)
-                        this.$store.dispatch('changeWeek', newWeek)
                         this.modalOpen = false
                     } else if (this.modalEndHour < this.modalStartHour) {
                         // display error msg
@@ -131,12 +120,12 @@ export default {
 }
 
 // il faut ajouter les fonctionnalités permettant de voir le working time d'un employé
-// de créer des workintimes et d'aller voir les dashboard user 
+// de créer des workintimes et d'aller voir les dashboard user
 
 </script>
 
 <template>
-    <div class="w-full px-6 py-4 bg-summarybg rounded-3xl shadow flex flex-col mt-6 mb-8" tabindex="0" aria-label="List of employee working hours">
+    <div class="w-full px-6 py-4 bg-summarybg rounded-3xl shadow flex flex-col mt-6 mb-8">
         <div class="flex justify-between items-center mb-4">
             <span class="text-second-text ml-2 text-xl font-bold">Employee working hours chart</span>
             <div>
@@ -165,10 +154,10 @@ export default {
         </div>
         <div v-if="isUserDashboard" class="w-full py-4 bg-summarybg flex flex-col gap-6 mt-4">
             <div class="flex gap-6">
-                <div class="w-6/12 h-56 px-6 py-4 bg-graph-bg rounded-3xl shadow flex flex-col justify-between" tabindex="0" aria-label="Random Fact">
+                <div class="w-6/12 h-56 px-6 py-4 bg-graph-bg rounded-3xl shadow flex flex-col justify-between">
                     <Random />
                 </div>
-                <div class="w-full md:w-6/12 h-5- p-3 bg-graph-bg-2 rounded-3xl shadow flex flex-col mb-6 md:mb-0 justify-between" tabindex="0" aria-label="Clock timer">
+                <div class="w-full md:w-6/12 h-5- p-3 bg-graph-bg-2 rounded-3xl shadow flex flex-col mb-6 md:mb-0 justify-between">
                     <Clock />
                 </div>
             </div>

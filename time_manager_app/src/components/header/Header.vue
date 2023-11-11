@@ -1,5 +1,5 @@
 <script>
-import { ApiPut, ApiDelete } from '../../utils/api'
+import { ApiPut, ApiDelete, ApiPost, ApiGet } from '../../utils/api'
 import { firstLetterUpper } from '../../utils/utils'
 
 
@@ -41,8 +41,10 @@ export default {
         let res = await ApiDelete(`/users/${this.$store.state.currUser.id}`, this.$store.state.token)
         this.$store.dispatch('logout')
     },
-    logout() {
-        this.$store.dispatch('logout').then(() => this.$router.push('/login'))
+    async logout() {
+        let res = await ApiGet('/users/logout', this.$store.state.token).then(() => {
+            this.$store.dispatch('logout').then(() => this.$router.push('/login'))
+        })
     },
     handleNav() {
         if(this.$store.state.currUser.role === "employee") {

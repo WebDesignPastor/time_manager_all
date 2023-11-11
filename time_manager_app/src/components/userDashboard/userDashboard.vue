@@ -4,8 +4,9 @@ import Summary from '../summary/Summary.vue';
 import Random from '../random/Random.vue'
 import Workingtime from '../workingtime/Workingtime.vue';
 import DashboardGraph from '../dashboardGraph/DashboardGraph.vue';
-import { workingTimeDataFormat } from '../../utils/chart'
+import { customToolTip, workingTimeDataFormat } from '../../utils/chart'
 import { getWeekFromDate } from '../../utils/date'
+import { ApiGet } from '../../utils/api';
 
 export default {
     name: 'UserDashboard',
@@ -30,13 +31,13 @@ export default {
 
 <template>
     <div class="w-full flex justify-between gap-6">
-        <div class="w-4/12 h-56 px-6 py-4 bg-summarybg rounded-3xl shadow flex flex-col justify-between" tabindex="0" aria-label="Summary">
+        <div class="w-4/12 h-56 px-6 py-4 bg-summarybg rounded-3xl shadow flex flex-col justify-between">
             <Summary />
         </div>
-        <div class="w-4/12 h-56 px-6 py-4 bg-secondary rounded-3xl shadow flex flex-col justify-between" tabindex="0" aria-label="Random Fact">
+        <div class="w-4/12 h-56 px-6 py-4 bg-secondary rounded-3xl shadow flex flex-col justify-between">
             <Random />
         </div>
-        <div class="w-4/12 h-56 px-6 py-4 bg-clockbg rounded-3xl shadow flex flex-col justify-between" tabindex="0" aria-label="Clock timer">
+        <div class="w-4/12 h-56 px-6 py-4 bg-clockbg rounded-3xl shadow flex flex-col justify-between">
             <Clock />
         </div>
     </div>
