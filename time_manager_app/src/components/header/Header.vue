@@ -1,5 +1,5 @@
 <script>
-import { ApiPut, ApiDelete } from '../../utils/api'
+import { ApiPut, ApiDelete, ApiPost, ApiGet } from '../../utils/api'
 import { firstLetterUpper } from '../../utils/utils'
 
 
@@ -11,7 +11,9 @@ export default {
         username: this.$store.state.currUser.username != null ? firstLetterUpper(this.$store.state.currUser.username) : 'Se connecter',
         modalOpen: false,
         usernameForm: '',
-        emailForm: ''
+        emailForm: '',
+        password: '',
+        isResponsive: window.innerWidth > 1280 ? false : true
     }
   },
   mounted() {
@@ -30,6 +32,15 @@ export default {
         if(this.usernameForm !== '') {
             newData['username'] = this.usernameForm
         }
+        if(this.password !== '') {
+            const password = this.password;
+            const encoder = new TextEncoder()
+            const data = encoder.encode(password)
+            const hash = await crypto.subtle.digest("SHA-256", data)
+            const hashArray = Array.from(new Uint8Array(hash))
+            const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("")
+            newData['password'] = hashHex
+        }
         if(Object.keys(newData).length > 0) {
             let res = await ApiPut(`/users/${this.$store.state.currUser.id}`, newData, this.$store.state.token)
             this.$store.dispatch('changeUpdateUser', res).then(() => {
@@ -41,8 +52,10 @@ export default {
         let res = await ApiDelete(`/users/${this.$store.state.currUser.id}`, this.$store.state.token)
         this.$store.dispatch('logout')
     },
-    logout() {
-        this.$store.dispatch('logout').then(() => this.$router.push('/login'))
+    async logout() {
+        let res = await ApiGet('/users/logout', this.$store.state.token).then(() => {
+            this.$store.dispatch('logout').then(() => this.$router.push('/login'))
+        })
     },
     handleNav() {
         if(this.$store.state.currUser.role === "employee") {
@@ -57,17 +70,22 @@ export default {
 </script>
 
 <template>
-    <header class="flex justify-between items-center max-w-7xl m-8">
+    <header class="flex justify-between items-center xl:w-full max-w-7xl sm:m-8 m-4">
         <div class="flex justify-between items-center">
-            <button class="text-primary flex justify-center items-center rounded-full mr-12 p-2 text-3xl font-semibold w-11 h-11 border border-solid" tabindex="0" aria-label="Go to dashboard">
-                <span @click="handleNav" class="cursor-pointer">G</span>
+            <button class="text-primary flex justify-center items-center rounded-full mr-4 sm:mr-12 p-2 text-3xl font-semibold w-11 h-11 border border-solid" tabindex="0" aria-label="Go to dashboard">
+                <span v-if="this.$store.state.currUser.role !== null && this.$store.state.currUser.role === 'employee'">G</span>
+                <svg @click="handleNav" class="cursor-pointer" v-else-if="this.$store.state.currUser.role !== null && this.$store.state.currUser.role != 'employee' && isResponsive" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="28" height="28" viewBox="0 0 50 50" fill="none" stroke="currentColor">
+                    <path d="M 0 9 L 0 11 L 50 11 L 50 9 Z M 0 24 L 0 26 L 50 26 L 50 24 Z M 0 39 L 0 41 L 50 41 L 50 39 Z"></path>
+                </svg>
+                <span v-else>G</span>
             </button>
             <div>
-                <h1 class="m-0 text-3xl font-normal text-white">{{ this.$store.state.currentContent }}</h1>
+                <h1 v-if="this.$store.state.currentContent !== 'Employes-dashboard'" class="m-0 text-2xl sm:text-3xl font-normal text-white">{{ this.$store.state.currentContent }}</h1>
+                <h1 v-else class="m-0 text-lg sm:text-3xl font-normal text-white">{{ this.$store.state.currentContent }}</h1>
             </div>
         </div>
         <div class="flex justify-between items-center" v-if="this.$router.currentRoute._value.path != '/login'">
-            <div class="text-2xl mr-2 font-normal cursor-pointer" @click="modalOpen = true">
+            <div class="text-xl sm:text-2xl mr-2 font-normal cursor-pointer" @click="modalOpen = true">
                 <span>{{ username }}</span>
             </div>
             <button class="flex items-center [&>*]:w-9 [&>*]:h-9 [&>*]:cursor-pointer" @click="modalOpen = true" aria-label="Account settings">
@@ -101,6 +119,10 @@ export default {
                         <div>
                             <label for="usernameForm" class="block mb-2 text-sm font-medium text-second-text">Your username</label>
                             <input v-model="usernameForm" id="usernameForm" type="text" name="usernameForm" class="bg-tertiary text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="username">
+                        </div>
+                        <div>
+                            <label for="password" class="block mb-2 text-sm font-medium text-second-text">Your password</label>
+                            <input v-model="password" type="password" name="password" id="password" placeholder="••••••••" class="bg-tertiary text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 text-white" required="" aria-label="enter your password">
                         </div>
                         <div class="flex flex-col">
                             <button @click="updateUser" type="button" class="text-red-700 hover:text-white border border-tertiary text-tertiary focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-2 hover:text-white hover:bg-tertiary">Update</button>

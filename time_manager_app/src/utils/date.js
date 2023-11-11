@@ -81,8 +81,8 @@ export const getDatesRange = (date) => {
     const currentWeekEnd = new Date(date)
     currentWeekEnd.setDate(date.getDate() + (6 - date.getDay()))
 
-    result.startDate = fourthLastWeekStart
-    result.endDate = currentWeekEnd
+    result.startDate = formatDate(fourthLastWeekStart)
+    result.endDate = formatDate(currentWeekEnd)
 
     return result
 }

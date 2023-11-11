@@ -47,6 +47,12 @@ export const dataExample = {
                 "start": "2023-11-01T09:37:23",
                 "end": "2023-11-01T17:37:00",
                 "clocking": false
+              },
+              {
+                "start": "2023-11-02T10:00:00",
+                "end": "2023-11-02T17:00:00",
+                "userId": 6,
+                "clocking": false
               }
             ],
             "workintimes": [
