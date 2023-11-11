@@ -47,7 +47,8 @@ defmodule TimeManager.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:cors_plug, "~> 3.0"},
       {:bcrypt_elixir, "~> 3.1"},
-      {:joken, "~> 2.6"}
+      {:joken, "~> 2.6"},
+      {:faker, "~> 0.17"}
     ]
   end
 

@@ -58,6 +58,12 @@ defmodule TimeManager.WorkingTimes do
 
   #------ CREATE ---------------------
 
+  def create_working_time_seed(id, attrs) do
+    %WorkingTime{user_id: id}
+    |> WorkingTime.changeset(attrs)
+    |> Repo.insert()
+  end
+
   def create_working_time(id, attrs \\ %{}) do
     case Users.get_user(id) do
       nil -> {}
