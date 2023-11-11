@@ -21,7 +21,7 @@ export const ApiGet = async (url, token) => {
     }
 }
 
-export const ApiPost = async (url, body, token) => {    
+export const ApiPost = async (url, body, token) => {
     let isAuthNeeded = false
     if(token !== null && token !== undefined) {
         isAuthNeeded = true

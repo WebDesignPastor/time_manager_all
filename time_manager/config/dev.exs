@@ -2,20 +2,15 @@ import Config
 
 # Configure your database
 config :time_manager, TimeManager.Repo,
-  #username: "postgres",
-  #password: "postgres",
-  #hostname: "localhost",
-  #database: "time_manager_dev",
-
-  username: System.get_env("PGUSER") || "postgres",
-  password: System.get_env("PGPASSWORD") || "postgres",
-  hostname: System.get_env("PGHOST") || "db",
-  database: System.get_env("PGDATABASE") || "time_manager_dev",
-  port: String.to_integer(System.get_env("PGPORT") || "5432"),
+  # username: System.get_env("PGUSER"),
+  # password: System.get_env("PGPASSWORD"),
+  # hostname: System.get_env("PGHOST"),
+  # database: System.get_env("PGDATABASE"),
+  # port: String.to_integer(System.get_env("PGPORT")),
 
   stacktrace: true,
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+  show_sensitive_data_on_connection_error: false,
+  pool_size: 20
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
@@ -27,10 +22,11 @@ config :time_manager, TimeManagerWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {0, 0, 0, 0}, port: 4000],
-  check_origin: false,
+  # Phoenix checks if Websocket requests come from an authorized domain
+  check_origin: true,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "Nq0shMezmUZx4UpQMHADCqrNMhOiub1X3HHtOpp1ok0cgqCQ9dm6tAaNQzDHyedp",
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
   watchers: []
 
 # ## SSL Support
