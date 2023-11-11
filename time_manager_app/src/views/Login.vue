@@ -30,12 +30,11 @@ export default {
 
                 let body = {
                     email: this.email,
-                    password: hashHex
+                    password: this.password
                 }
                 let res = await ApiPost('/users/login', body)
 
                 if (res.status === 200) {
-                    //dispatch les infos users que je veux ici
                     this.isClickable = true
                     let userData = res.data
                     userData["isAuth"] = true
@@ -70,9 +69,7 @@ export default {
                     password: hashHex,
                     username: this.username
                 }
-                console.log(body)
                 let res = await ApiPost('/users', body)
-                console.log(res)
                 
                 if (res.status === 201) {
                     this.isLoginPage = true

@@ -62,7 +62,7 @@
     >
       <template #item-username="item">
         <div>
-          <button @click="console.log(`go to ${item.username} dashboard`)">{{ item.username }}</button>
+          <button>{{ item.username }}</button>
         </div>
       </template>
       <template #item-teamsId="item">

@@ -70,7 +70,7 @@ export default {
 </script>
 
 <template>
-    <header class="flex justify-between items-center max-w-7xl sm:m-8 m-4">
+    <header class="flex justify-between items-center xl:w-full max-w-7xl sm:m-8 m-4">
         <div class="flex justify-between items-center">
             <button class="text-primary flex justify-center items-center rounded-full mr-4 sm:mr-12 p-2 text-3xl font-semibold w-11 h-11 border border-solid" tabindex="0" aria-label="Go to dashboard">
                 <span v-if="this.$store.state.currUser.role !== null && this.$store.state.currUser.role === 'employee'">G</span>

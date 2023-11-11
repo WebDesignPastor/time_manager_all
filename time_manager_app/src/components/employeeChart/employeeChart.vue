@@ -134,7 +134,7 @@ export default {
                 <!-- Gestion l'accessibilité des injections  -->
             </div>
         </div>
-        <div class="w-full flex justify-between items-center flex-col sm:flex" v-if="isInitialized">
+        <div class="w-full flex justify-between items-center flex-col sm:flex-row" v-if="isInitialized">
             <div class="w-full sm:w-6/12 mt-4 sm:mt-0">
                 <Workingtime :bg-color="bgColor" :data="chartData" />
             </div>
@@ -150,7 +150,7 @@ export default {
         <div class="w-full flex justify-center text-second-text text-xl mt-12 mb-12" v-else>
             <span>Select an employee</span>
         </div>
-        <div v-if="isUserDashboard" class="w-full py-4 bg-summarybg flex flex-col gap-6 mt-4">
+        <div v-if="isUserDashboard" class="w-full py-2 sm:py-4 bg-summarybg flex flex-col gap-6 mt-4">
             <div class="flex gap-6 flex-col sm:flex">
                 <div class="w-full sm:w-6/12 h-56 px-6 py-4 bg-graph-bg rounded-3xl shadow flex flex-col justify-between">
                     <Random />

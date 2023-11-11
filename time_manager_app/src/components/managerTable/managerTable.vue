@@ -33,7 +33,6 @@ export default {
     async init() {
       let res = await ApiGet('/users', this.$store.state.token)
       let items = res.filter((user) => user.role !== 'general_manager')
-      console.log(items)
       this.items = items
     },
     async updateUserSelect(e, user, toUpdate) {
@@ -60,7 +59,6 @@ export default {
       } else {
         body['managed_teams'] = [1]
       }
-      console.log(body)
       let res = await ApiPut(`/users/${this.$store.state.currUser.id}`, body, this.$store.state.token)
       this.$store.dispatch('changeManagedTeams', res.managedTeams)
 

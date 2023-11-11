@@ -31,10 +31,10 @@ export default {
 
 <template>
     <div class="w-full flex justify-between gap-6 flex-col sm:flex-row">
-        <div class="w-full sm:w-4/12 h-56 px-6 py-4 bg-summarybg rounded-3xl shadow flex flex-col justify-between">
+        <div class="w-full sm:w-4/12 sm:h-56 h-40 px-6 py-4 bg-summarybg rounded-3xl shadow flex flex-col justify-between">
             <Summary />
         </div>
-        <div class="w-full sm:w-4/12 h-56 px-6 py-4 bg-secondary rounded-3xl shadow flex flex-col justify-between">
+        <div class="w-full sm:w-4/12 sm:h-56 h-40 px-6 py-4 bg-secondary rounded-3xl shadow flex flex-col justify-between">
             <Random />
         </div>
         <div class="w-full sm:w-4/12 h-56 px-6 py-4 bg-clockbg rounded-3xl shadow flex flex-col justify-between">

@@ -54,7 +54,6 @@ export default {
       }
 
       let res = await ApiPut(`/users/${user.id}`, body, this.$store.state.token)
-      console.log(res)
       let upateIndex = this.items.findIndex((x) => x.id === res.id)
       let updateItems = this.items.filter((x) => x.id !== res.id)
       let newItems = [

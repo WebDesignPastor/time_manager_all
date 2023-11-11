@@ -99,8 +99,8 @@ export default {
 <template>
         <h2 class="m-0 sm:text-lg md:text-2xl text-2xl font-bold tracking-tight text-second-text">Clock</h2>
         <div class="flex justify-center items-center flex-col" v-if="isLoaded && clock">
-            <span class="text-gray sm:text-lg md:text-2xl text-2xl mb-2" tabindex="0" :aria-label="clock.status ? 'Time start at :' + startHour.toLocaleString() : 'Time stop at :' + endHour.toLocaleString() ">{{ clock.status ? 'Started at :' : 'Ended :' }}</span>
-            <span class="text-second-text sm:text-lg md:text-2xl text-xl text-center">{{ clock.status ? startHour : endHour }}</span>
+            <span class="text-gray sm:text-lg md:text-xl text-xl mb-2" tabindex="0" :aria-label="clock.status ? 'Time start at :' + startHour.toLocaleString() : 'Time stop at :' + endHour.toLocaleString() ">{{ clock.status ? 'Started at :' : 'Ended :' }}</span>
+            <span class="text-second-text text-lg text-center">{{ clock.status ? startHour : endHour }}</span>
         </div>
         <div v-else class="flex justify-center items-center flex-col">
             <span class="text-gray text-sm mb-2 sm:text-lg md:text-xl">Start the timer</span>
