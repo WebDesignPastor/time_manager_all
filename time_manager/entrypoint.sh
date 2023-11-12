@@ -2,11 +2,11 @@
 
 cd /app
 
-mix ecto.setup
+echo ----------------------------------
+echo "Creating database, migration and seeds"
+echo ----------------------------------
 
-echo ----------------------------------
-echo "Starting Phoenix server..."
-echo ----------------------------------
+mix ecto.setup
 
 # Wait for the database to be ready
 while ! pg_isready -h $PGHOST -p $PGPORT -q -U $PGUSER
@@ -17,28 +17,6 @@ done
 
 echo ----------------------------------
 echo "Database is ready!"
-echo ----------------------------------
-
-echo ----------------------------------
-echo "Creating database..."
-echo ----------------------------------
-
-mix ecto.create
-
-echo ----------------------------------
-echo "Running database migrations..."
-echo ----------------------------------
-
-mix ecto.migrate
-
-echo ----------------------------------
-echo "Seeding the database..."
-echo ----------------------------------
-
-mix run priv/repo/seeds.exs
-
-echo ----------------------------------
-echo "seeds.exs executed!"
 echo ----------------------------------
 
 echo ----------------------------------
