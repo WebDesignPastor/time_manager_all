@@ -18,8 +18,7 @@ defmodule TimeManagerWeb.JWTAuthPlug do
         nil -> conn
       end
 
-      key = System.get_env("SECRET_KEY_BASE")
-      signer = Joken.Signer.create("HS256", key)
+      signer = Joken.Signer.create("HS256", "NmM2Hu2tANjmiA2PeEugci8VbyXsvO6ObEFryrkbpoBycc6N9IJT7NHdo16bBGx3")
 
       with {:ok, %{"user_id" => user_id, "exp" => exp}} <- TimeManagerWeb.JWTToken.verify_and_validate(token, signer), %User{} = user <- Users.get_user(user_id) do
         if valid_expiration?(exp) do
