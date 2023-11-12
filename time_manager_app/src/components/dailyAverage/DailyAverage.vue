@@ -86,7 +86,7 @@ export default {
                     this.isComboChart = false
                     let toCheck = [...val['averageClocks']]
                     toCheck.shift()
-                    if(toCheck.reduce((i, j) => { return i + j}) !== 0) {
+                    if(toCheck.length > 0 && toCheck.reduce((i, j) => { return i + j}) !== 0) {
                         this.showClock = true
                     }
                 }
@@ -126,12 +126,14 @@ export default {
             let res = await ApiPost('/chartmanager', body, this.$store.state.token)
             if (res.status === 200) {
                 let val = formatDataDailyAverage(res.data.teams, new Date())
+                console.log(val)
+                console.log(res.data)
                 this.teams = val['teams']
                 this.chartData = val['chartData']
                 this.averageClocksHours = val['averageClocks']
                 let toCheck = [...val['averageClocks']]
                 toCheck.shift()
-                if(toCheck.reduce((i, j) => { return i + j}) !== 0) {
+                if(toCheck.length > 0 && toCheck.reduce((i, j) => { return i + j}) !== 0) {
                     this.showClock = true
                 }
             }
