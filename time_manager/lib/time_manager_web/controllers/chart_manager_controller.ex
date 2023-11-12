@@ -12,7 +12,7 @@ defmodule TimeManagerWeb.ChartManagerController do
 
     case {conn.params["userID"]} do
       {_requested_user_id} when current_user.role == "general_manager" or current_user.role == "manager" -> conn
-      _ -> render(conn, :error, message: "Not authorized based on role")
+      _ -> conn |> put_status(:unauthorized) |> render(:error, message: "Not authorized based on role")
     end
   end
 

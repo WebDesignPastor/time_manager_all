@@ -15,9 +15,9 @@ defmodule TimeManager.Seeds do
     "diana", "dr.mundo", "draven", "ekko", "elise", "evelynn", "ezreal", "fiddlesticks", "fiora", "fizz"
   ]
   ))
-
-  Users.create_user_seed!(%{username: "admin", email: "email@admin.com", password: "admin", role: "general_manager" })
-
+  
+  Users.create_user_seed!(%{username: "admin", email: "admin@admin.com", password: "admin", role: "general_manager" })
+  
   for n <- 0..29 do
     name = Enum.at(names, n)
     user_params = %{
