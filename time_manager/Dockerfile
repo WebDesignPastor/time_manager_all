@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY . /app
 
-ENV MIX_ENV=dev
+ENV MIX_ENV=prod
 
 RUN mix local.hex --force && \
     mix local.rebar --force && \
