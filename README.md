@@ -121,6 +121,40 @@ To view the API documentation follow thes steps:
 
 2. Paste it in [swagger editor](https://editor.swagger.io/)
 
+
+## Get HTTPS Enable HTTPS on AWS EC2 with a Domain Name
+### Prerequisites
+
+- A domain name registered with a domain registrar.
+- An EC2 instance running under Amazon Linux 2.
+- A security group for the EC2 instance that allows incoming HTTPS connections (port 443).
+
+### Configuration Security group
+
+  - From the AWS console, create a new security group.
+  - Associate this security group with the EC2 instance.
+  - Add a rule to allow incoming HTTPS traffic:
+    - Traffic type: HTTPS
+    - Port range: 443
+
+### Point the Domain Name to the AWS EC2 Instance
+
+- Connect to the domain registrar's management console.
+- Select the domain name.
+- In the DNS or Name Servers section, update the records to point to the DNS addresses
+
+### Install and configure SSL Certificate
+
+- Connexion to EC2 instance
+- Generate CSR and Private Key, use OpenSSL to create a private key and a certificate signing request (CSR):
+
+
+```bash
+openssl req -new -newkey rsa:2048 -nodes -keyout nom_domaine.key -out nom_domaine.csr
+```
+- Submit the CSR to a certification authority to obtain an SSL certificate.
+- Place the SSL certificate (.crt) and the private key (.key) on the EC2 instance and configure the web server to use the SSL certificate and the private key.
+
 ## Contributing
 - [dhalley](https://github.com/dhall3y)
 - [Baptiste Lemonnier](https://github.com/Baptill)
