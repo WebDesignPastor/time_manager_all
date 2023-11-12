@@ -79,7 +79,7 @@ defmodule TimeManagerWeb.UserController do
     current_user_role = conn.assigns.current_user.role 
 
     user_params =
-    if user_params["manager_id"] != user.manager_id do
+    if user_params["manager_id"] != nil && user_params["manager_id"] != user.manager_id do
       Map.put(user_params, "teams_id", 0)
     else
       user_params
