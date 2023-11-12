@@ -24,7 +24,7 @@ defmodule TimeManagerWeb.UserController do
           %User{} = requested_user when current_user.role == "manager" and requested_user.manager_id == current_user.id ->
             conn
           nil -> conn |> put_status(:bad_request) |> render(:error, message: "Incorrect userId in request")|> halt()
-          _ -> conn |> put_status(:unauthorized) |> render(:error, message: "Not authorized base on role") |> halt()
+          _ -> conn |> put_status(:unauthorized) |> render(:error, message: "Not authorized based on role") |> halt()
         end
     end
   end
@@ -64,7 +64,7 @@ defmodule TimeManagerWeb.UserController do
 
   def show(conn, %{"userID" => id}) do
     case Users.get_by_id(id) do
-      { :ok, %User{} = user } -> render(conn, :references_show, user: user)
+      { :ok, %User{} = user } -> conn |> put_status(:ok) |> render(:references_show, user: user)
       _ -> conn |> put_status(:internal_server_error) |> render(:error, message: "Couldn't fetch user data")
     end
   end

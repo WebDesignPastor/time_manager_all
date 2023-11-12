@@ -29,8 +29,8 @@ defmodule TimeManagerWeb.ClockController do
             conn
           %User{} = requested_user when current_user.role == "manager" and requested_user.manager_id == current_user.id ->
             conn
-          nil -> render(conn, :error, message: "Incorrect userId in request")
-          _ -> render(conn, :error, message: "Not authorized based on role")
+          nil -> conn |> put_status(:bad_request) |> render(:error, message: "Incorrect userId in request")
+          _ -> conn |> put_status(:unauthorized) |> render(:error, message: "Not authorized based on role")
         end
     end
   end
@@ -41,17 +41,17 @@ defmodule TimeManagerWeb.ClockController do
       %Clock{status: false} -> 
         case Clocks.create_clock(id) do
           {:ok, %Clock{} = clock} -> render(conn, :show, clock: clock)
-          _ -> render(conn, :error, message: "Clock couldn't be created")
+          _ -> conn |> put_status(:internal_server_error) |> render(:error, message: "Clock couldn't be created")
         end
       %Clock{status: true} = last_clock ->
         case Clocks.update_last_clock(last_clock) do
           {:ok, %Clock{} = clock} -> render(conn, :show, clock: clock)
-          _ -> render(conn, :error, message: "Clock couldn't be updated")
+          _ -> conn |> put_status(:internal_server_error) |> render(:error, message: "Clock couldn't be updated")
         end
       nil ->
         case Clocks.create_clock(id) do
           {:ok, %Clock{} = clock}-> render(conn, :show, clock: clock)
-          _ -> render(conn, :error, message: "Clock couldn't be created")
+          _ -> conn |> put_status(:internal_server_error) |> render(:error, message: "Clock couldn't be created")
         end
     end
   end

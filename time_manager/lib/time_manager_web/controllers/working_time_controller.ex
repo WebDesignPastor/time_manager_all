@@ -23,8 +23,8 @@ defmodule TimeManagerWeb.WorkingTimeController do
             conn
           %User{} = requested_user when current_user.role == "manager" and requested_user.manager_id == current_user.id ->
             conn
-          nil -> render(conn, :error, message: "Incorrect userId in request")
-          _ -> render(conn, :error, message: "Not authorized based on role")
+          nil -> conn |> put_status(:bad_request) |> render(:error, message: "Incorrect userId in request")
+          _ -> conn |> put_status(:unauthorized) |> render(:error, message: "Not authorized based on role")
         end
     end
   end
@@ -44,8 +44,8 @@ defmodule TimeManagerWeb.WorkingTimeController do
         case Users.get_user(requested_user_id) do
           %User{} = requested_user when current_user.role == "manager" and requested_user.manager_id == current_user.id ->
             conn
-          nil -> render(conn, :error, message: "Incorrect userId in request")
-          _ -> render(conn, :error, message: "Not authorized based on role")
+          nil -> conn |> put_status(:bad_request) |> render(:error, message: "Incorrect userId in request")
+          _ -> conn |> put_status(:unauthorized) |> render(:error, message: "Not authorized based on role")
         end
     end
   end
@@ -53,7 +53,7 @@ defmodule TimeManagerWeb.WorkingTimeController do
   def index(conn, %{"userID" => id, "start" => startTime, "end" => endTime}) do
     case WorkingTimes.get_by(id, startTime, endTime) do
       nil -> conn |> put_status(:not_found) |> render(:error, message: "Workingtime not found")
-      _ = working_times -> render(conn, :index, workingtimes: working_times)
+      _ = working_times -> conn |> put_status(:ok) |> render(:index, workingtimes: working_times)
     end
   end
 
@@ -81,7 +81,7 @@ defmodule TimeManagerWeb.WorkingTimeController do
       {:ok, working_time} ->
         working_time_params = %{start: startTime, end: endTime}
         with {:ok, %WorkingTime{} = working_time} <- WorkingTimes.update_working_time(working_time, working_time_params) do
-          render(conn, :index, workingtimes: working_time)
+          conn |> put_status(:ok) |> render(:index, workingtimes: working_time)
         end
     end
   end

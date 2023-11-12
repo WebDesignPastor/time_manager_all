@@ -203,10 +203,4 @@ defmodule TimeManager.Users do
   def get_by(username, email) do
     Repo.get_by(User, username: username, email: email)
   end
-
-  def create_user_seed!(attr) do
-    %User{}
-    |> User.changeset(attr)
-    |> Repo.insert()
-  end
 end
