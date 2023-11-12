@@ -81,6 +81,8 @@ defmodule TimeManagerWeb.UserController do
     user_params =
     if user_params["manager_id"] != user.manager_id do
       Map.put(user_params, "teams_id", 0)
+    else
+      user_params
     end
 
     user_params =
