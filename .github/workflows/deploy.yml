@@ -29,18 +29,30 @@ jobs:
         # SSH into EC2 and deploy
         ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST <<-EOF
 
+          echo "Changing to project directory..."
           # Change to project directory
           cd time_manager_all
 
+          echo "Current directory:"
+          # Print the current directory
+          pwd
+
+          echo "Pulling latest changes..."
           # Pull latest changes
           git pull
 
+          echo "Git pull completed."
+
+          echo "Setting environment variables..."
           # Set environment variables
           export PGUSER=$PGUSER
           export PGPASSWORD=$PGPASSWORD
           export PGDATABASE=$PGDATABASE
 
+          echo "Restarting services with forced build..."
           # Restart the services with forced build
           sudo docker-compose down
           sudo docker-compose up -d --build
+
+          echo "Deployment completed."
         EOF
