@@ -82,7 +82,7 @@ PGPORT=YOUR_PG_PORT
 ## Api Documentation
 To view the API documentation follow thes steps:
 
-1. Copy the yaml on [Pastebin](https://pastebin.com/8Bg41S6b)
+1. Copy the yaml on [Pastebin](https://pastebin.com/t6L0V38S)
 
 2. Paste it in [swagger editor](https://editor.swagger.io/)
 
