@@ -23,7 +23,7 @@ defmodule TimeManagerWeb.ChartManagerController do
       "manager" -> 
         teams = ChartManager.get_team(startTime, endTime, current_user.id)
         render(conn, :references_show, teams: teams)
-      "general_manager" -> 
+      "general_manager" ->
         teams = ChartManager.get_all(startTime, endTime)
         render(conn, :references_show, teams: teams)
     end

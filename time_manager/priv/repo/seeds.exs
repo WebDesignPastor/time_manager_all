@@ -3,10 +3,10 @@ defmodule TimeManager.Seeds do
   alias TimeManager.Users
   alias TimeManager.WorkingTimes
   alias TimeManager.Users.User
-  
+
   ExUnit.start()
   Faker.start()
-  
+
   Repo.delete_all(User)
 
   names = Enum.uniq(Enum.shuffle([
@@ -24,7 +24,7 @@ defmodule TimeManager.Seeds do
       "username" => name,
       "email" => name <> "@test.com",
       "password" => name,
-      "role" => 
+      "role" =>
         if rem(n, 3) == 0 do
           "manager"
         else
@@ -34,7 +34,7 @@ defmodule TimeManager.Seeds do
     {_, user} = Users.create_user_seed!(user_params)
 
     start_date = ~D[2023-10-11]
-    end_date = Date.add(start_date, 30) 
+    end_date = Date.add(start_date, 30)
 
     Date.range(start_date, end_date)
     |> Enum.each(fn date ->

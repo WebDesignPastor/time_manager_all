@@ -41,7 +41,7 @@ defmodule TimeManagerWeb.UserController do
 
   def index(conn, _params) do
     current_user = conn.assigns[:current_user]
-    users = 
+    users =
     if current_user.role != "general_manager" do
       Users.list_users_from_team(current_user.id)
     else
@@ -76,7 +76,7 @@ defmodule TimeManagerWeb.UserController do
 
   def update(conn, %{"userID" => id} = user_params) do
     user = Users.get_user!(id)
-    current_user_role = conn.assigns.current_user.role 
+    current_user_role = conn.assigns.current_user.role
 
     user_params =
     if user_params["manager_id"] != nil && user_params["manager_id"] != user.manager_id do
@@ -88,11 +88,11 @@ defmodule TimeManagerWeb.UserController do
     user_params =
     case user_params["role"] do
       #demotion
-      "employee" when user.role == "manager" -> 
+      "employee" when user.role == "manager" ->
         Map.put(user_params, "managed_teams", nil)
       #promotion
       "manager" when user.role == "employee" ->
-        user_params 
+        user_params
         |> Map.put("manager_id", nil)
         |> Map.put("teams_id", 0)
       _ -> user_params
@@ -124,7 +124,7 @@ defmodule TimeManagerWeb.UserController do
 
     if user.role == "manager" do
       case Users.delete_user(user) do
-        {:ok, %User{}} -> 
+        {:ok, %User{}} ->
           Users.update_users(user.id)
           send_resp(conn, :no_content, "")
         _ -> conn |> put_status(:internal_server_error) |> render(:error, message: "couln't delete user")

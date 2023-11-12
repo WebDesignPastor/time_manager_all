@@ -97,40 +97,42 @@ export const formatDataDailyAverage = (data, date) => {
         data.map((team) => {
             let newObj = {id: team.teamsId, name: team.teamsId}
             let teamAverage = []
-            team.users.map((user) => {
-                let userWorkingtimeAverage = []
-                // get all workingtime in ragne and return hours val
-                let toCheck = []
-                fullRange.map((day, index) => {
-                    for(let i = 0; i < user.workingTimes.length; i++) {
-                        if((user.workingTimes[i].start >= startRange && user.workingTimes[i].start <= endRange) && (user.workingTimes[i].end >= startRange && user.workingTimes[i].end <= endRange)) {
-                            if(day.getDay() === new Date(user.workingTimes[i].start).getDay()) {
-                                toCheck.push({checked: true, val: i, day: index})
+            if(Object.keys(team).length !== 0) {
+                team.users.map((user) => {
+                    let userWorkingtimeAverage = []
+                    // get all workingtime in ragne and return hours val
+                    let toCheck = []
+                    fullRange.map((day, index) => {
+                        for(let i = 0; i < user.workingTimes.length; i++) {
+                            if((user.workingTimes[i].start >= startRange && user.workingTimes[i].start <= endRange) && (user.workingTimes[i].end >= startRange && user.workingTimes[i].end <= endRange)) {
+                                if(day.getDay() === new Date(user.workingTimes[i].start).getDay()) {
+                                    toCheck.push({checked: true, val: i, day: index})
+                                }
                             }
                         }
-                    }
-                    for(let i = 0; i < user.clock.length; i++) {
-                        if(user.clock[i].start >= startRange && user.clock[i].start <= endRange && user.clock[i].end >= startRange && user.clock[i].end <= endRange) {
-                            if(day.getDay() === new Date(user.clock[i].start).getDay()) {
-                                allClocks.push({day: day.getDay(), user: user.id, start: user.clock[i].start, end: user.clock[i].end})
+                        for(let i = 0; i < user.clock.length; i++) {
+                            if(user.clock[i].start >= startRange && user.clock[i].start <= endRange && user.clock[i].end >= startRange && user.clock[i].end <= endRange) {
+                                if(day.getDay() === new Date(user.clock[i].start).getDay()) {
+                                    allClocks.push({day: day.getDay(), user: user.id, start: user.clock[i].start, end: user.clock[i].end})
+                                }
                             }
                         }
+                    })
+                    // ensuite il faut voir quel jour il manque pour les ajouter a 0 
+                    for(let i = 0; i < 7; i++) {
+                        if(toCheck[i] !== undefined) {
+                            if(toCheck[i].day == i) {
+                                let d1 = user.workingTimes[toCheck[i].val].start
+                                let d2 = user.workingTimes[toCheck[i].val].end
+                                userWorkingtimeAverage.push(getHoursDiffFromRange(new Date(d1), new Date(d2)))
+                            }
+                        }else {
+                            userWorkingtimeAverage.push(0)
+                        }
                     }
+                    teamAverage.push(userWorkingtimeAverage)
                 })
-                // ensuite il faut voir quel jour il manque pour les ajouter a 0 
-                for(let i = 0; i < 7; i++) {
-                    if(toCheck[i] !== undefined) {
-                        if(toCheck[i].day == i) {
-                            let d1 = user.workingTimes[toCheck[i].val].start
-                            let d2 = user.workingTimes[toCheck[i].val].end
-                            userWorkingtimeAverage.push(getHoursDiffFromRange(new Date(d1), new Date(d2)))
-                        }
-                    }else {
-                        userWorkingtimeAverage.push(0)
-                    }
-                }
-                teamAverage.push(userWorkingtimeAverage)
-            })
+            }
             if(teamAverage.length > 0) {
                 // sort matrix of hours to do the average
                 let teamWorkingtimeAverage = []

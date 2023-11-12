@@ -86,7 +86,7 @@ export default {
                     this.isComboChart = false
                     let toCheck = [...val['averageClocks']]
                     toCheck.shift()
-                    if(toCheck.reduce((i, j) => { return i + j}) !== 0) {
+                    if(toCheck.length > 0 && toCheck.reduce((i, j) => { return i + j}) !== 0) {
                         this.showClock = true
                     }
                 }
@@ -131,7 +131,7 @@ export default {
                 this.averageClocksHours = val['averageClocks']
                 let toCheck = [...val['averageClocks']]
                 toCheck.shift()
-                if(toCheck.reduce((i, j) => { return i + j}) !== 0) {
+                if(toCheck.length > 0 && toCheck.reduce((i, j) => { return i + j}) !== 0) {
                     this.showClock = true
                 }
             }
