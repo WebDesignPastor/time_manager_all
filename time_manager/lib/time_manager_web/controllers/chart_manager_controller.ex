@@ -20,10 +20,10 @@ defmodule TimeManagerWeb.ChartManagerController do
     current_user = conn.assigns[:current_user]
 
     case current_user.role do
-      "manager" -> 
+      "manager" ->
         teams = ChartManager.get_team(current_user.managed_teams, startTime, endTime)
         render(conn, :references_show, teams: teams)
-      "general_manager" -> 
+      "general_manager" ->
         teams = ChartManager.get_all(startTime, endTime)
         render(conn, :references_show, teams: teams)
     end
