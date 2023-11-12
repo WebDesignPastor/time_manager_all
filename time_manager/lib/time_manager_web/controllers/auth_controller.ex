@@ -21,8 +21,8 @@ defmodule TimeManagerWeb.AuthController do
             #  csrf_token = Plug.CSRFProtection.get_csrf_token()
             #  conn = put_session(conn, :csrf_token, csrf_token)
             #end
-
-            signer = Joken.Signer.create("HS256", "NmM2Hu2tANjmiA2PeEugci8VbyXsvO6ObEFryrkbpoBycc6N9IJT7NHdo16bBGx3")
+            key = Application.get_env(:time_manager, TimeManagerWeb.Endpoint)[:secret_key_base]
+            signer = Joken.Signer.create("HS256", key)
             extra_claims = %{
               "user_id" => user.id,
               #"csrf_token" => csrf_token,

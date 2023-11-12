@@ -1,5 +1,8 @@
 import Config
 
+config :time_manager, TimeManagerWeb.Endpoint,
+  secret_key_base: System.get_env("SECRET_KEY_BASE")
+
 # Configures Swoosh API Client
 config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: TimeManager.Finch
 
