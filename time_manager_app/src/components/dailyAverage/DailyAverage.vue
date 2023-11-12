@@ -126,8 +126,6 @@ export default {
             let res = await ApiPost('/chartmanager', body, this.$store.state.token)
             if (res.status === 200) {
                 let val = formatDataDailyAverage(res.data.teams, new Date())
-                console.log(val)
-                console.log(res.data)
                 this.teams = val['teams']
                 this.chartData = val['chartData']
                 this.averageClocksHours = val['averageClocks']

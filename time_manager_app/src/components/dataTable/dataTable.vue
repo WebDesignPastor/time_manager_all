@@ -74,7 +74,7 @@
         </div>
         <div v-else-if="this.$store.state.currUser.role === 'manager'">
           <select @change="updateUserSelect($event, item, 'teams_id')" style="background-color: #B9C1B6;">
-            <option>{{ item.teamsId }}</option>
+            <option selected>{{ item.teamsId }}</option>
             <option v-for="team in teams" :key="team">
               {{ team }}
             </option>

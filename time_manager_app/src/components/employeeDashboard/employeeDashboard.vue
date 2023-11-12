@@ -30,7 +30,7 @@ export default {
         <Random />
         <Clock />
     </div>
-    <div class="w-full flex flex-col sm:flex-row gap-6 mt-6">
+    <div class="w-full flex flex-col md:flex-row gap-6 mt-6">
         <div class="w-full md:w-6/12 min-h-56 p-3 bg-graph-bg rounded-3xl shadow flex flex-col mb-6 md:mb-0">
             <Workingtime :data="chartData" :bg-color="bgColor"/>
         </div>
