@@ -69,7 +69,7 @@ defmodule TimeManagerWeb.WorkingTimeController do
     case WorkingTimes.create_working_time(id, working_time_params) do
       nil -> conn |> put_status(:internal_server_error) |> render(:error, message: "couldn't create working_time") 
       %Ecto.Changeset{} -> conn |> put_status(:unprocessable_entity) |> render(:error, message: "Invalid format")
-      _ = working_time -> conn |> put_status(:created) |> put_resp_header("location", ~p"/api/workingtimes/#{working_time}") |> render(conn, working_times: working_time)
+      _ = working_time -> conn |> put_status(:created) |> put_resp_header("location", ~p"/api/workingtimes/#{working_time}") |> render(:index, working_times: working_time)
     end
   end
 
