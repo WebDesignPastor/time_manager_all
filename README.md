@@ -5,10 +5,10 @@
 - [Overview](#overview)
 - [Technologies Used](#technologies-used)
 - [Installation](#installation)
-	- [Local Installation](#local-installation) 
+	- [Local Installation](#local-installation)
 	- [Docker Installation](#docker-installation)
 - [Configuration](#configuration)
-	- [Front End Env](#front-end-env) 
+	- [Front End Env](#front-end-env)
 	- [Back End Env](#back-end-env)
 - [Api Documentation](#api-documentation)
 - [Contributing](#contributing)
@@ -47,7 +47,7 @@ npm run dev
 
 To install the project using Docker, follow these steps:
 
-1. Make sure you have [Docker](https://www.docker.com/) 
+1. Make sure you have [Docker](https://www.docker.com/)
 
 2. Clone the repository:
 
@@ -59,6 +59,41 @@ To install the project using Docker, follow these steps:
 	 ````bash
 	 docker compose up --build
 	 ````
+
+<details>
+<summary>Troubleshoot</summary>
+
+## Issue: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+
+### Solution 1 - CLI
+
+Start the Docker Daemon service using the following command:
+
+```bash
+sudo service docker start
+# or
+sudo systemctl start docker
+  ```
+
+### Solution 2 - Desktop
+
+Start Docker Desktop.
+
+## Issue: Port problem: Error starting userland proxy: listen tcp4 0.0.0.0:5432: bind: address already in use
+
+### Solution
+
+Check the availability of the port:
+```bash
+sudo lsof -i :5432
+  ```
+If the port is taken, it's probably by Postgres, stop it
+
+```bash
+sudo kill -9 <PID>
+```
+</details>
+
 ## Configuration
 ### Front End Env
 For the frontend, configure your environment by creating or editing a `.env` file in the `time_manager_app/` directory with the following content:
@@ -87,7 +122,7 @@ To view the API documentation follow thes steps:
 2. Paste it in [swagger editor](https://editor.swagger.io/)
 
 ## Contributing
-- [dhalley](https://github.com/dhall3y) 
-- [Baptiste Lemonnier](https://github.com/Baptill) 
+- [dhalley](https://github.com/dhall3y)
+- [Baptiste Lemonnier](https://github.com/Baptill)
 - [Chasmyr](https://github.com/Chasmyr)
 - [Evans Hulot](https://github.com/EvansHulot)
